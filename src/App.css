@@ -36,3 +36,20 @@
     transform: rotate(360deg);
   }
 }
+
+#socialTab {
+  display: flex;
+}
+
+FaFacebookSquare {
+  size: 24px;
+}
+
+.icon {
+  margin-left: "10px";
+  margin-right: "10px"
+}
+
+#socialTab > div > a {
+  color: white
+}

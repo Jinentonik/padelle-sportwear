@@ -5,6 +5,7 @@ import {
 } from 'reactstrap';
 import product1 from './Images/female_sport3.jpg'
 
+
 const Product = () => {
   return (
       <Container>
@@ -25,7 +26,7 @@ const Product = () => {
                     <h4>USD 39</h4>
                 </CardSubtitle>
                 <CardText>Great for barre, pilates, and post-workout hangouts. Our less-structured designs have a comfortable, soft feel ideal for all-day wear and smaller cup sizes.</CardText>
-                <Button style = {{backgroundColor:"palevioletred"}}>Buy now</Button>
+                <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}} >Buy now</Button>
                 </CardBody>
             </Card>
             <Card style = {{minWidth:"300px", marginBottom:"25px"}}>
@@ -38,7 +39,7 @@ const Product = () => {
                     <h4>USD 39</h4>
                 </CardSubtitle>
                 <CardText>Great for barre, pilates, and post-workout hangouts. Our less-structured designs have a comfortable, soft feel ideal for all-day wear and smaller cup sizes.</CardText>
-                <Button style = {{backgroundColor:"palevioletred"}}>Buy now</Button>
+                <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}}>Buy now</Button>
                 </CardBody>
             </Card>
             <Card style = {{minWidth:"300px", marginBottom:"25px"}}>
@@ -51,7 +52,7 @@ const Product = () => {
                     <h4>USD 39</h4>
                 </CardSubtitle>
                 <CardText>Great for barre, pilates, and post-workout hangouts. Our less-structured designs have a comfortable, soft feel ideal for all-day wear and smaller cup sizes.</CardText>
-                <Button style = {{backgroundColor:"palevioletred"}}>Buy now</Button>
+                <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}}>Buy now</Button>
                 </CardBody>
             </Card>
             <Card style = {{minWidth:"300px", marginBottom:"25px"}}>
@@ -64,7 +65,7 @@ const Product = () => {
                     <h4>USD 39</h4>
                 </CardSubtitle>
                 <CardText>Great for barre, pilates, and post-workout hangouts. Our less-structured designs have a comfortable, soft feel ideal for all-day wear and smaller cup sizes.</CardText>
-                <Button style = {{backgroundColor:"palevioletred"}}>Buy now</Button>
+                <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}}>Buy now</Button>
                 </CardBody>
             </Card>
             <Card style = {{minWidth:"300px", marginBottom:"25px"}}>
@@ -77,7 +78,7 @@ const Product = () => {
                     <h4>USD 39</h4>
                 </CardSubtitle>
                 <CardText>Great for barre, pilates, and post-workout hangouts. Our less-structured designs have a comfortable, soft feel ideal for all-day wear and smaller cup sizes.</CardText>
-                <Button style = {{backgroundColor:"palevioletred"}}>Buy now</Button>
+                <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}}>Buy now</Button>
                 </CardBody>
             </Card>
             <Card style = {{minWidth:"300px", marginBottom:"25px"}}>
@@ -90,7 +91,7 @@ const Product = () => {
                     <h4>USD 39</h4>
                 </CardSubtitle>
                 <CardText>Great for barre, pilates, and post-workout hangouts. Our less-structured designs have a comfortable, soft feel ideal for all-day wear and smaller cup sizes.</CardText>
-                <Button style = {{backgroundColor:"palevioletred"}}>Buy now</Button>
+                <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}}>Buy now</Button>
                 </CardBody>
             </Card>
             
