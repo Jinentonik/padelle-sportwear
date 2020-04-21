@@ -6,15 +6,18 @@ import MainPic from './components/main_pic'
 import Product from './components/product'
 import {FaFacebookSquare, FaInstagram, FaTwitterSquare} from 'react-icons/fa';
 import './App.css';
-
+import ProductPage from './Pages/product_page'
+import { Route } from 'react-router-dom';
 
 function App() {
   return (
     <div className="App">
       <Navbar></Navbar>
-      <MainPic></MainPic>
-      
-      <Product></Product>
+      <Route path='/' exact >
+        <MainPic></MainPic>
+        <Product></Product>
+      </Route>
+      <Route path='/products' component={ProductPage}></Route>
       <div style = {{paddingTop:"10px", width:"100%", backgroundColor:"palevioletred", display:"flex", justifyContent: "space-between"}}>
         
         <p style = {{paddingTop: "8px", color:"white", margin:"0px"}}>

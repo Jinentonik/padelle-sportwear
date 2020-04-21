@@ -17,12 +17,13 @@ import {
 import './navbar.css'
 import {FiShoppingCart} from 'react-icons/fi';
 // import {FiShoppingCart} from 'react-icons/fa'
+import {Link} from 'react-router-dom'
 
 
 
 const NavBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const token = null //localStorage.getItem("token")
   const toggle = () => setIsOpen(!isOpen);
 
   return (
@@ -38,7 +39,9 @@ const NavBar = (props) => {
               <NavLink href="/components/">Home</NavLink>
             </NavItem>
             <NavItem>
-              <NavLink href="#">Products</NavLink>
+              <Link to="/products">
+                <NavLink href="#">Products</NavLink>
+              </Link>
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
@@ -55,8 +58,28 @@ const NavBar = (props) => {
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
+          {token === null?
+            <div style = {{display:"flex"}}>
+              <div style = {{padding:"10px",color:"grey"}}>
+                <a href = "#" style = {{color:"grey"}}>
+                  Sign Up 
+                </a>
+              </div>
+              <div style = {{padding:"10px", color:"grey"}}>
+                <a href = "#" style = {{color:"grey"}}>
+                  Log In 
+                </a>
+              </div>
+            </div>:
+            <div style = {{padding:"10px", color:"grey"}}>
+              <a href = "#" style = {{color:"grey"}}>
+                Log Out
+              </a>
+            </div>
+          }
+          
           <div style = {{color:"grey"}}>
-            Cart <FiShoppingCart size = {24} color = {'grey'}></FiShoppingCart>
+            Cart <FiShoppingCart size = {22} color = {'grey'}></FiShoppingCart>
           </div>
         </Collapse>
         {/* <Col>abc</Col> */}

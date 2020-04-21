@@ -3,9 +3,10 @@ import Img2 from './Images/female_sport2.jpg'
 import { Button, Row, Container} from 'reactstrap';
 
 const MainPic = () => {
+    // className reference https://mdbootstrap.com/docs/react/utilities/display/
     return( 
             <Row>
-                <Row style = {{height: "95vh", overflow:"hidden", position: "relative"}} className = "d-none d-md-block ">
+                <Row style = {{height: "95vh", overflow:"hidden", position: "relative"}} className = "d-none d-md-block "> 
                     <img src = {Img2} style = {{width: "100%"}}></img> 
                     <div style = {{width: "30%", position: "absolute", top: "50%", right:"10%", color: "white"}}>
                         <h2>New Design for this season has launched!</h2>
