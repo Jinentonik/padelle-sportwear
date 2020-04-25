@@ -11,20 +11,33 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  NavbarText,
-  Col
 } from 'reactstrap';
 import './navbar.css'
 import {FiShoppingCart} from 'react-icons/fi';
-// import {FiShoppingCart} from 'react-icons/fa'
-import {Link} from 'react-router-dom'
+import {Link, useHistory } from 'react-router-dom'
+import SignUpModal from './sign_up_modal'
+import LogInModal from './log_in_modal'
 
 
 
 const NavBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
-  const token = null //localStorage.getItem("token")
-  const toggle = () => setIsOpen(!isOpen);
+  const history = useHistory();
+  
+  const token = localStorage.getItem("token")
+  const toggle = () => {
+    setIsOpen(!isOpen)
+  };
+  const [signUpModal, setSignUpModal] = useState(false)
+  const [logInModal, setLogInModal] = useState(false)
+  const toggleSignUpModal = () => setSignUpModal(!signUpModal)
+  const toggleLogInModal = () => setLogInModal(!logInModal)
+
+  const logoutFunc = () =>{
+    localStorage.removeItem("token")
+    history.push("/");
+  }
+
 
   return (
     <div id = "navBarDiv">
@@ -59,32 +72,41 @@ const NavBar = (props) => {
             </UncontrolledDropdown>
           </Nav>
           {token === null?
-            <div style = {{display:"flex"}}>
-              <div style = {{padding:"10px",color:"grey"}}>
-                <a href = "#" style = {{color:"grey"}}>
-                  Sign Up 
-                </a>
-              </div>
-              <div style = {{padding:"10px", color:"grey"}}>
-                <a href = "#" style = {{color:"grey"}}>
-                  Log In 
-                </a>
-              </div>
-            </div>:
-            <div style = {{padding:"10px", color:"grey"}}>
-              <a href = "#" style = {{color:"grey"}}>
-                Log Out
-              </a>
-            </div>
-          }
-          
-          <div style = {{color:"grey"}}>
-            Cart <FiShoppingCart size = {22} color = {'grey'}></FiShoppingCart>
-          </div>
+            <Nav navbar>
+              <NavItem>
+                <NavLink >
+                  <a href = "#" onClick = {toggleSignUpModal} style = {{color:"gray"}}>Sign Up</a>
+                </NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink>
+                  <a href = "#" onClick = {toggleLogInModal} style = {{color:"gray"}}>Log In</a>
+                </NavLink>
+              </NavItem>
+            </Nav>:
+            <Nav navbar>
+            <NavItem>
+              <NavLink >
+                <a href = "#" style = {{color:"gray"}}>My account</a>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink>
+                <a href = "#" onClick = {logoutFunc} style = {{color:"gray"}}>Log out</a>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink>
+                <a href = "#" style = {{color:"gray"}}>Cart<FiShoppingCart size = {22} color ={'gray'}></FiShoppingCart></a>
+              </NavLink>
+            </NavItem>
+          </Nav>
+            }
         </Collapse>
-        {/* <Col>abc</Col> */}
       </Navbar>
       </div>
+      <SignUpModal modal = {signUpModal} setModal = {setSignUpModal}></SignUpModal>
+      <LogInModal modal = {logInModal} setModal = {setLogInModal}></LogInModal>
     </div>
   );
 }

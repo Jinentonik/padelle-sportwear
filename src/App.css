@@ -53,3 +53,13 @@ FaFacebookSquare {
 #socialTab > div > a {
   color: white
 }
+
+input[type=submit]:disabled {
+  background: #dddddd;
+  color: "black"
+}
+
+input[type=submit] {
+  background: palevioletred;
+  color: "white"
+}
