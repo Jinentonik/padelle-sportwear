@@ -6,9 +6,11 @@ import Product from './components/product'
 import {FaFacebookSquare, FaInstagram, FaTwitterSquare} from 'react-icons/fa';
 import './App.css';
 import ProductPage from './Pages/product_page'
+import UserProfilePage from './Pages/user_profile_page'
 import { Route } from 'react-router-dom';
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
   return (
@@ -19,6 +21,7 @@ function App() {
         <Product></Product>
       </Route>
       <Route path='/products' component={ProductPage}></Route>
+      <Route path='/profile' component={UserProfilePage}></Route>
       <div style = {{paddingTop:"10px", width:"100%", backgroundColor:"palevioletred", display:"flex", justifyContent: "space-between"}}>
         
         <p style = {{paddingTop: "8px", color:"white", margin:"0px"}}>

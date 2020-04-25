@@ -63,3 +63,11 @@ input[type=submit] {
   background: palevioletred;
   color: "white"
 }
+
+.userProfileTitle{
+  text-align: right;
+}
+
+.userProfileContent{
+  text-align: left;
+}
