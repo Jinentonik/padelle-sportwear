@@ -2,24 +2,42 @@ import React from 'react'
 import { Pagination, PaginationItem, PaginationLink } from 'reactstrap';
 
 const ProductPagination = (props) => {
-    const {productPerPage, totalProducts, setCurrentPage} = props
+    const {productPerPage, totalProducts, setCurrentPage, currentPage} = props
     let pageNumber = []
     let numberOfPages = Math.ceil(totalProducts/productPerPage)
     for(let i = 1; i <= numberOfPages; i++){
         pageNumber.push(i)
     }
 
-    let paginate = (num) => {
+    const firstPage = () => {
+      setCurrentPage(pageNumber[0])
+    } 
+    
+    const lastPage = () => {
+      let lastpg = pageNumber[pageNumber.length - 1]
+      setCurrentPage(lastpg)
+    }
+
+    const paginate = (num) => {
       setCurrentPage(num)
     }
+
+    const prevPage = () => {
+      setCurrentPage(currentPage - 1)
+    }
+
+    const nextPage = () => {
+      setCurrentPage(currentPage + 1)
+    }
+
     return(
 
         <Pagination size="sm" aria-label="Page navigation example">
       <PaginationItem>
-        <PaginationLink first href="#" />
+        <PaginationLink first href="#" onClick = {()=>firstPage()}/>
       </PaginationItem>
       <PaginationItem>
-        <PaginationLink previous href="#" />
+        <PaginationLink previous href="#" onClick = {prevPage} />
       </PaginationItem>
         {pageNumber.map((num)=>{
             return(
@@ -32,10 +50,10 @@ const ProductPagination = (props) => {
         })}
       
       <PaginationItem>
-        <PaginationLink next href="#" />
+        <PaginationLink next href="#" onClick = {nextPage} />
       </PaginationItem>
       <PaginationItem>
-        <PaginationLink last href="#" />
+        <PaginationLink last href="#" onClick = {()=>lastPage()}/>
       </PaginationItem>
     </Pagination>
     )

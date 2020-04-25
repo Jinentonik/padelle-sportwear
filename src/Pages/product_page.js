@@ -127,7 +127,7 @@ const ProductPage = () =>{
             })}           
             
         </CardDeck>
-        <ProductPagination productPerPage={productPerPage} totalProducts={product.length} setCurrentPage={setCurrentPage}></ProductPagination>
+        <ProductPagination productPerPage={productPerPage} totalProducts={product.length} setCurrentPage={setCurrentPage} currentPage = {currentPage}></ProductPagination>
       </Container>
     )
 }

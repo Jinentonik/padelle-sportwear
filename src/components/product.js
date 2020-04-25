@@ -39,6 +39,31 @@ const Product = () => {
             "name":"Sport Bra",
             "price": "RM39",
             "description": "last "
+        },
+        {
+            "name":"Sport Bra",
+            "price": "RM39",
+            "description": "Great for barre, pilates, and post-workout hangouts. "
+        },
+        {
+            "name":"Sport Bra",
+            "price": "RM39",
+            "description": "last 4 "
+        },
+        {
+            "name":"Sport Bra",
+            "price": "RM39",
+            "description": "yessss "
+        },
+        {
+            "name":"Sport Bra",
+            "price": "RM39",
+            "description": "last2 "
+        },
+        {
+            "name":"Sport Bra",
+            "price": "RM39",
+            "description": "last "
         }
     ]
     const indexOfLastProduct = currentPage * productPerPage
@@ -79,7 +104,7 @@ const Product = () => {
                 )
             })}           
         </CardDeck>
-        <ProductPagination productPerPage={productPerPage} totalProducts={product.length} setCurrentPage={setCurrentPage}></ProductPagination>
+        <ProductPagination productPerPage={productPerPage} totalProducts={product.length} setCurrentPage={setCurrentPage} currentPage = {currentPage}></ProductPagination>
       </Container>
     
   );
