@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormFeedback, FormText, Col} from 'reactstrap';
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const SignUpModal = (props) => {
     const {modal, setModal} = props
@@ -8,46 +9,44 @@ const SignUpModal = (props) => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [confirmPassword, setConfirmPassword] = useState('')
-    const [validConfirmPassword, setValidConfirmPassword] = useState('')
-    const [invalidConfirmPassword, setInvalidConfirmPassword] = useState('')
     const [passwordType, setPasswordType] = useState('password')
-    const [disabled, setDisabled] = useState('disabled')
     const [passwordConstraintMet, setpasswordConstraintMet] = useState(false)
-    let checkpw = ''
     
     const checkAllField = () => {
-        if(username === '' || email === '' || checkpw === 'incorrect' || passwordConstraintMet === false){
-            setDisabled('disabled')
-
-        }else{
-            setDisabled('')
+        
+        if(username === '' || email === '' || password !== confirmPassword || passwordConstraintMet === false){
+            return true
         }
+        else{
+            return false
+        }
+        
     }
 
     const toggle = () => {
-        // console.log(modal) 
         setModal(!modal);
     }
-    const confirmPasswordFunc = (e) => {
-        const password = document.getElementById('password').value
-        setConfirmPassword(e.target.value)
-        if(password === e.target.value){
-            checkpw = 'correct'
-            setValidConfirmPassword(true)
-            setInvalidConfirmPassword(false) 
-            checkAllField()
-            // console.log(checkpw)
+
+    const invalidPasswordFunc = () => {
+        console.log(password, confirmPassword)
+        if(password === confirmPassword){
+            return false
+        }else{
+            return true
+        }
+        
+    }
+
+    const validPasswordFunc = (e) => {
+        if(password === confirmPassword){
+            return true
             
         }else{
-            checkpw = 'incorrect'
-            setValidConfirmPassword(false)
-            setInvalidConfirmPassword(true)
-            checkAllField()
+            return false
         }
         
     }
     const showPasswordFunc = () => {
-        console.log('clicked')
         if(passwordType === 'password'){
             setPasswordType('text')
         }else{
@@ -57,25 +56,20 @@ const SignUpModal = (props) => {
     const checkPassword = (e)=>{
         let passwordInput = e.target.value 
         setPassword(passwordInput)
-        // console.log(passwordInput) 
         let specialCharRegex = RegExp('[^A-Za-z0-9]')
         let checkSpecialChar = specialCharRegex.test(passwordInput)
-        console.log(checkSpecialChar)
         let uppercaseCharRegex = RegExp('[A-Z]')
         let checkUppercaseChar = uppercaseCharRegex.test(passwordInput)
-        console.log(checkUppercaseChar)
         let lowercaseCharRegex = RegExp('[a-z]')
         let checkLowercaseChar = lowercaseCharRegex.test(passwordInput)
 
         //check if password constraint is met
         if(checkSpecialChar === true && checkUppercaseChar === true && checkLowercaseChar === true && passwordInput.length > 6){
             setpasswordConstraintMet(true)
-            // console.log('passwordconstraint has been met')
         }else{
             setpasswordConstraintMet(false)
         }
         //disable or enable submit button
-        checkAllField()
         
         //check input length
         if(passwordInput.length > 6){
@@ -108,9 +102,6 @@ const SignUpModal = (props) => {
     }
     const signUp = (e) => {
         e.preventDefault()
-        console.log(username)
-        console.log(password)
-        console.log(email)
         axios({
             url: 'https://padelle.herokuapp.com/api/v1/users/signup',
             method:'POST',
@@ -127,6 +118,7 @@ const SignUpModal = (props) => {
             console.log('Success')
             console.log(res)
             console.log('********')
+            toast.success('You have successfully sign up',{position:"top-right"})
             toggle()
             
         })
@@ -136,6 +128,7 @@ const SignUpModal = (props) => {
                 console.log(err)
                 console.log(err.response)
                 console.log('***********')
+                toast.warning(`Something's wrong.`)
 
             }
         )
@@ -155,7 +148,7 @@ const SignUpModal = (props) => {
                 <ModalBody>
                     <FormGroup>
                         <Label for="username">Username</Label>
-                        <Input type="text" name="username" id="username" value = {username} onRateChangeCapture = {(e)=> {setUsername(e.target.value)} }/>
+                        <Input type="text" name="username" id="username" value = {username} onChange = {(e)=> {setUsername(e.target.value)} }/>
                     </FormGroup>
                     <FormGroup>
                         <Label for="email">Email</Label>
@@ -186,12 +179,12 @@ const SignUpModal = (props) => {
                     <FormGroup>
                         
                         <Label for="confirm_password">Confirm Password</Label>
-                        <Input type="password" name="confirm_password" id="confirm_password" onChange = {(e)=>{confirmPasswordFunc(e)}} valid = {validConfirmPassword} invalid = {invalidConfirmPassword}/>
+                        <Input type="password" name="confirm_password" id="confirm_password" onChange = {(e)=>{setConfirmPassword(e.target.value)}} valid = {validPasswordFunc()} invalid = {invalidPasswordFunc()}/>
                     </FormGroup>
                 </ModalBody>
                 <ModalFooter>
                     {/* <Button style = {{backgroundColor:"palevioletred", color: "white"}}>Sign Up</Button> */}
-                    <Input color="primary" type = "submit"  value = "Sign Up" id = "signUpBtn" disabled = {disabled}></Input>
+                    <Input color="primary" type = "submit"  value = "Sign Up" id = "signUpBtn" disabled = {checkAllField()}></Input>
                 </ModalFooter>
             </Form>
         </Modal>

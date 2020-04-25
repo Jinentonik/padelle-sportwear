@@ -23,7 +23,6 @@ import LogInModal from './log_in_modal'
 const NavBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const history = useHistory();
-  
   const token = localStorage.getItem("token")
   const toggle = () => {
     setIsOpen(!isOpen)

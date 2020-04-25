@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormFeedback, FormText, Col} from 'reactstrap';
 import axios from 'axios'
+import { toast } from 'react-toastify'
 
 const LogInModal = (props) => {
     const {modal, setModal} = props
@@ -48,11 +49,13 @@ const LogInModal = (props) => {
             console.log(success)
             console.log(success.data.auth_token)
             localStorage.setItem("token", success.data.auth_token)
+            toast.info(`Welcome back ${success.data.user.username}!`)
             
             setModal(false)
         })
         .catch(error => {
             console.log(error)
+            toast.warning(`Invalid login!`)
         })
         setUsername('')
         setPassword('')

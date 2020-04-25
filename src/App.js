@@ -1,6 +1,5 @@
 import React from 'react';
 import logo from './logo.svg';
-
 import Navbar from './components/navbar'
 import MainPic from './components/main_pic'
 import Product from './components/product'
@@ -8,6 +7,8 @@ import {FaFacebookSquare, FaInstagram, FaTwitterSquare} from 'react-icons/fa';
 import './App.css';
 import ProductPage from './Pages/product_page'
 import { Route } from 'react-router-dom';
+import { ToastContainer} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
   return (
@@ -43,6 +44,17 @@ function App() {
           </div>
         </div>
       </div>
+      <ToastContainer position="top-right"
+                      autoClose={5000}
+                      hideProgressBar={false}
+                      newestOnTop={false}
+                      closeOnClick
+                      rtl={false}
+                      pauseOnVisibilityChange
+                      draggable
+                      pauseOnHover>
+
+      </ToastContainer>
     </div>
   );
 }
