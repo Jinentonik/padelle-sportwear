@@ -49,6 +49,7 @@ const LogInModal = (props) => {
             console.log(success)
             console.log(success.data.auth_token)
             localStorage.setItem("token", success.data.auth_token)
+            localStorage.setItem("admin_status", success.data.user.Admin_status )
             toast.info(`Welcome back ${success.data.user.username}!`)
             
             setModal(false)

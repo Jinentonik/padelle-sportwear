@@ -24,6 +24,7 @@ const NavBar = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const history = useHistory();
   const token = localStorage.getItem("token")
+  const admin_status = localStorage.getItem("admin_status")
   const toggle = () => {
     setIsOpen(!isOpen)
   };
@@ -34,6 +35,7 @@ const NavBar = (props) => {
 
   const logoutFunc = () =>{
     localStorage.removeItem("token")
+    localStorage.removeItem("admin_status")
     history.push("/");
   }
 
@@ -57,6 +59,11 @@ const NavBar = (props) => {
                 <NavLink >Products</NavLink>
               </Link>
             </NavItem>
+            <NavItem>
+              <Link to="/all_users">
+                <NavLink >All users</NavLink>
+              </Link>
+            </NavItem>
             <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
                 More
@@ -72,23 +79,26 @@ const NavBar = (props) => {
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
-          {token === null?
-            <Nav navbar>
-              <NavItem>
-                <NavLink >
-                  <a href = "#" onClick = {toggleSignUpModal} style = {{color:"gray"}}>Sign Up</a>
-                </NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink>
-                  <a href = "#" onClick = {toggleLogInModal} style = {{color:"gray"}}>Log In</a>
-                </NavLink>
-              </NavItem>
-            </Nav>:
+          {token === null && admin_status === null?
             <Nav navbar>
             <NavItem>
               <NavLink >
-                <a href = "#" style = {{color:"gray"}}>My account</a>
+                <a href = "#" onClick = {toggleSignUpModal} style = {{color:"gray"}}>Sign Up</a>
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <NavLink>
+                <a href = "#" onClick = {toggleLogInModal} style = {{color:"gray"}}>Log In</a>
+              </NavLink>
+            </NavItem>
+          </Nav>:
+          admin_status === 'true'?
+          <Nav navbar>
+            <NavItem>
+              <NavLink>
+                <Link to ="/admin">
+                  <a href = "#" style = {{color:"gray"}}>Admin panel</a>
+                </Link>
               </NavLink>
             </NavItem>
             <NavItem>
@@ -96,12 +106,26 @@ const NavBar = (props) => {
                 <a href = "#" onClick = {logoutFunc} style = {{color:"gray"}}>Log out</a>
               </NavLink>
             </NavItem>
-            <NavItem>
-              <NavLink>
-                <a href = "#" style = {{color:"gray"}}>Cart<FiShoppingCart size = {22} color ={'gray'}></FiShoppingCart></a>
-              </NavLink>
-            </NavItem>
-          </Nav>
+          </Nav>:
+          <Nav navbar>
+          <NavItem>
+            <NavLink >
+              <Link to="/profile">
+                <a href = "#" style = {{color:"gray"}}>My account</a>
+              </Link>
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink>
+              <a href = "#" onClick = {logoutFunc} style = {{color:"gray"}}>Log out</a>
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink>
+              <a href = "#" style = {{color:"gray"}}>Cart<FiShoppingCart size = {22} color ={'gray'}></FiShoppingCart></a>
+            </NavLink>
+          </NavItem>
+        </Nav>
             }
         </Collapse>
       </Navbar>
