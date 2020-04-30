@@ -1,7 +1,6 @@
 import React, {useState,useEffect} from 'react'
 import {Table, Container, Button} from 'reactstrap'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
 
 
 const AllUsers = () => {

@@ -5,6 +5,7 @@ const ProductPagination = (props) => {
     const {productPerPage, totalProducts, setCurrentPage, currentPage} = props
     let pageNumber = []
     let numberOfPages = Math.ceil(totalProducts/productPerPage)
+    console.log(totalProducts, productPerPage, numberOfPages)
     for(let i = 1; i <= numberOfPages; i++){
         pageNumber.push(i)
     }

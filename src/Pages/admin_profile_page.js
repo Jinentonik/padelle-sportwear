@@ -2,194 +2,140 @@ import React, {useState, useEffect} from 'react'
 import {Table, Container, Button, Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormText} from 'reactstrap'
 import {Link} from 'react-router-dom'
 import axios from 'axios'
+import {
+    Card, CardImg, CardText, CardBody, CardLink,
+    CardTitle, CardSubtitle, CardDeck, Col
+  } from 'reactstrap';
+import AddProductModal from '../components/add_product_modal'
+
 
 const AdminProfilePage = () => {
-    const [productType, setProductType] = useState('')
-    const [productName, setProductName] = useState('')
-    const [productColor, setProductColor] = useState('')
-    const [productSize, setProductSize] = useState('XS')
-    const [stockQty, setStockQty] = useState('')
-    const [productPrice, setProductPrice] = useState('')
-    const [imageFile, setImageFile] = useState(null)
     let token = localStorage.getItem('token')
     let admin_status = localStorage.getItem('admin_status')
+
     const [modal, setModal] = useState(false)
+    const [productsList, setProductsList] = useState([])
+    const [imageFile, setImageFile] = useState('')
 
     const toggle = () => setModal(!modal);
 
-    // useEffect(
-    //     axios({
-    //         url: 'https://padelle.herokuapp.com/api/v1/items/add_item',
-    //     })
-    //     ,[])
-
-
-    const handleFile = (e) => {
-        setImageFile(e.target.files[0])
-        // setPreviewImage(URL.createObjectURL(e.target.files[0]))
-        // setMessage('uploaded')
-    }
-
-    const addProductFunc = (e) => {
-        e.preventDefault()
+    useEffect(()=>{
+        console.log('list all items')
         
-        
-        axios({
-            url: 'https://padelle.herokuapp.com/api/v1/items/add_item',
-            method: "POST",
-            // headers:{
-            //     Authorization: `Bearer ${token}`
-            // },
-            data:{
-                "name": productName,
-                "product_type": productType,
-                "size": productSize,
-                "price": productPrice,
-                "stock": stockQty,
-                "image": imageFile.name
-            }
-        })
-        // axios({
-        //     url: 'https://padelle.herokuapp.com/api/v1/items/upload_item_image',
-        //     method: "POST",
-        //     data: formData,
-            
-            
-        // })
+        axios.get('https://padelle.herokuapp.com/api/v1/items/items')
         .then(success => {
-            let formData = new FormData()
-            formData.append("img", imageFile)
-            axios({
-            url: 'https://padelle.herokuapp.com/api/v1/items/upload_item_image',
-            method: "POST",
-            data: formData,
-            headers:{
-                Authorization: `Bearer ${token}`
-            }
-            })
-            .then(success =>{
-                console.log(success)
-            }
-            )
-            .catch(err=>console.log(err))
-            console.log('successful upload image')
             console.log(success)
-            setProductType('')
-            setProductName('')
-            setProductSize('')
-            setProductColor('')
-            setProductPrice('')
-            setStockQty('')
-            setImageFile(null)
-            toggle()
+            console.log(success.data)
+            setProductsList(success.data)
         })
-        .catch(err => {
-            console.log('error happen')
+        .catch(err => console.log(err))
+    },[])
+
+    const handleFile = (e)=> {
+        setImageFile(e.target.files[0])
+    }
+    
+    const uploadImageTest=()=>{
+        let formData = new FormData()
+        formData.append("img", imageFile)
+        console.log(token)
+
+        axios({
+            url:'https://padelle.herokuapp.com/api/v1/items/upload_item_image',
+            method: "POST",
+            headers:{
+                "Authorization": `Bearer ${token}`
+            },
+            data: formData
+
+
+        })
+        .then(success=>{
+            console.log(success)
+        })
+        .catch(err=>{
             console.log(err)
         })
     }
 
     return(
         <div>
+            <Input type = "file" onClick={(e)=> handleFile(e)}></Input>
+            <Button onClick={uploadImageTest}>Upload Image</Button>
+
             <Button onClick={toggle}>Add product</Button>
-            <Modal isOpen={modal} toggle={toggle} >
-                <ModalHeader toggle={toggle}>Modal title</ModalHeader>
-                <ModalBody>
-                    <Form onSubmit={(e)=>addProductFunc(e)}>
-                        <FormGroup>
-                            <Label for="productType">Product Type</Label>
-                            <Input type="text" name="productType" id="productType" value = {productType} onChange = {(e)=>setProductType(e.target.value)} />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="productName">Product Name</Label>
-                            <Input type="text" name="name" id="productName" value = {productName} onChange = {(e)=>setProductName(e.target.value)}/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="color">Color</Label>
-                            <Input type="text" name="color" id="color" value = {productColor} onChange = {(e)=>setProductColor(e.target.value)}  />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="size">Size</Label>
-                            <Input type="select" name="size" id="size" onInput = {(e)=> setProductSize(e.target.value)}>
-                            <option value = "XS">XS</option>
-                            <option value = "S">S</option>
-                            <option value = "M">M</option>
-                            <option value = "L">L</option>
-                            <option value = "XL">XL</option>
-                            <option value = "XXL">XXL</option>
-                            </Input>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="stock">Stock Quantity</Label>
-                            <Input type="number" name="stock" id="stock" value = {stockQty} onChange = {(e)=>setStockQty(e.target.value)} />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="price">Price</Label>
-                            <Input type="number" name="price" id="price" value = {productPrice} onChange = {(e)=>setProductPrice(e.target.value)}/>
-                        </FormGroup>
-                        <FormGroup>
-                            <Label for="productImage">Product image</Label>
-                            <Input type="file" name="image" id="productImage" onChange = {(e) => handleFile(e)} />
-                            <FormText color="muted">
-                                One image only.
-                            </FormText>
-                        </FormGroup>
-                        <Input type="submit" value = "Submit"></Input>
-                    </Form>
-                </ModalBody>
-                
-            </Modal>
+            <AddProductModal modal={modal} setmodal={setModal} toggle = {toggle}></AddProductModal>
+            
             <Container>
                     {
                         token != null || admin_status === 'true'?
-                        <Container style={{minHeight:"500px"}}>
-                            <Table >
+                        <Container style={{minHeight:"500px"}} >
+                            {/* <CardDeck>  */}
+                            <Table>
                                 <thead>
                                     <tr>
-                                        <th>#</th>
-                                        <th>Product Type</th>
-                                        <th>Name</th>
-                                        <th>Color</th>
-                                        <th>Size</th>
-                                        <th>Quantity</th>
-                                        <th>Price</th>
-                                        <th>Image</th>
+                                    <th>#</th>
+                                    <th>Name</th>
+                                    <th>Product Type</th>
+                                    <th>Color</th>
+                                    <th>Size</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>image</th>
+                                    <th></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                    </tr>
-                                    <tr>
-                                    <th scope="row">3</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                    <th scope="row">4</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                    </tr>
-                                    <tr>
-                                    <th scope="row">5</th>
-                                    <td>Larry</td>
-                                    <td>the Bird</td>
-                                    <td>@twitter</td>
-                                    </tr>
-                                    
+                                    {
+                                        productsList.map((product, idx)=>{
+                                            return(
+                                                // <Col xs="12" md ="6" lg="4">
+                                                //     <Card>
+                                                //         <CardBody>
+                                                //         <CardTitle>Product {idx}</CardTitle>
+                                                //         <CardSubtitle>{product.name}</CardSubtitle>
+                                                //         <CardSubtitle>{product.type}</CardSubtitle>
+                                                //         </CardBody>
+                                                //         <img width="100%" src={product.image_url} alt="Card image cap"  />
+                                                //         <CardBody>
+                                                //         <CardText>Size: {product.size}</CardText>
+                                                //         <CardText>Price: {product.price}</CardText>
+                                                //         <CardText>Quantity: {product.stock}</CardText>
+                                                //         <Button color="info">Edit</Button>
+                                                //         <Button color="danger">Delete</Button>
+                                                //         {/* <CardLink href="#">Card Link</CardLink> */}
+                                                //         {/* <CardLink href="#">Another Link</CardLink> */}
+                                                //         </CardBody>
+                                                //     </Card>
+                                                // </Col>
+
+                                                    
+                                                
+                                                    <tr>
+                                                    <th scope="row">{idx+1}</th>
+                                                    <td>{product.name}</td>
+                                                    <td>{product.type}</td>
+                                                    <td></td>
+                                                    <td>{product.size}</td>
+                                                    <td>{product.stock}</td>
+                                                    <td>{product.price}</td>
+                                                    <td>
+                                                        <img src = {product.image_url} style = {{width:"100px"}}></img>
+                                                    </td>
+                                                    <td>
+                                                        <Button>Edit</Button>
+                                                        <Button color="danger">Delete</Button>
+                                                    </td>
+                                                    </tr>
+                                                    
+                                            )
+                                        })
+                                    }
                                 </tbody>
                             </Table>
+                                
+                            {/* </CardDeck> */}
+                            
                         </Container>:
                         <Container style={{minHeight:"500px"}}>
                             <h1>

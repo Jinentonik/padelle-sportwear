@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import {
+  Button,
   Collapse,
   Navbar,
   NavbarToggler,
@@ -11,12 +12,14 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  UncontrolledPopover, PopoverHeader, PopoverBody 
 } from 'reactstrap';
 import './navbar.css'
 import {FiShoppingCart} from 'react-icons/fi';
 import {Link, useHistory } from 'react-router-dom'
 import SignUpModal from './sign_up_modal'
 import LogInModal from './log_in_modal'
+import ShoppingCartModal from './cart_modal'
 
 
 
@@ -122,7 +125,7 @@ const NavBar = (props) => {
           </NavItem>
           <NavItem>
             <NavLink>
-              <a href = "#" style = {{color:"gray"}}>Cart<FiShoppingCart size = {22} color ={'gray'}></FiShoppingCart></a>
+              <a href = "#" style = {{color:"gray"}} >Cart<FiShoppingCart size = {22} color ={'gray'}></FiShoppingCart></a>
             </NavLink>
           </NavItem>
         </Nav>
@@ -132,6 +135,8 @@ const NavBar = (props) => {
       </div>
       <SignUpModal modal = {signUpModal} setModal = {setSignUpModal}></SignUpModal>
       <LogInModal modal = {logInModal} setModal = {setLogInModal}></LogInModal>
+      <ShoppingCartModal ></ShoppingCartModal>
+      
     </div>
   );
 }
