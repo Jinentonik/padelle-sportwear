@@ -53,6 +53,7 @@ const LogInModal = (props) => {
             toast.info(`Welcome back ${success.data.user.username}!`)
             
             setModal(false)
+            window.location.reload()
         })
         .catch(error => {
             console.log(error)

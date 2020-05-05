@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
-  Button,
+  
   Collapse,
   Navbar,
   NavbarToggler,
@@ -11,8 +11,7 @@ import {
   UncontrolledDropdown,
   DropdownToggle,
   DropdownMenu,
-  DropdownItem,
-  UncontrolledPopover, PopoverHeader, PopoverBody 
+  DropdownItem 
 } from 'reactstrap';
 import './navbar.css'
 import {FiShoppingCart} from 'react-icons/fi';
@@ -20,20 +19,26 @@ import {Link, useHistory } from 'react-router-dom'
 import SignUpModal from './sign_up_modal'
 import LogInModal from './log_in_modal'
 import ShoppingCartModal from './cart_modal'
+import axios from 'axios';
 
 
 
-const NavBar = (props) => {
+const NavBar = () => {
+  const [cartItem, setCartItem] = useState([])
   const [isOpen, setIsOpen] = useState(false);
+  const [signUpModal, setSignUpModal] = useState(false)
+  const [logInModal, setLogInModal] = useState(false)
+  const [cartModal, setCartModal] = useState(false)
   const history = useHistory();
   const token = localStorage.getItem("token")
   const admin_status = localStorage.getItem("admin_status")
+
   const toggle = () => {
     setIsOpen(!isOpen)
   };
-  const [signUpModal, setSignUpModal] = useState(false)
-  const [logInModal, setLogInModal] = useState(false)
+  
   const toggleSignUpModal = () => setSignUpModal(!signUpModal)
+
   const toggleLogInModal = () => setLogInModal(!logInModal)
 
   const logoutFunc = () =>{
@@ -42,7 +47,44 @@ const NavBar = (props) => {
     history.push("/");
   }
 
+  const cartFunc = () => {
+    setCartModal(!cartModal)
+  }
 
+  // useEffect(()=>{
+  //   axios({
+  //       url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
+  //       method:'GET',
+  //       headers:{
+  //           "Authorization": `Bearer ${token}`
+  //       }
+  //   })
+  //   .then(res=>{ 
+  //       console.log(res)
+  //       setCartItem(["hello"])
+  //   })
+  //   .catch(err=>{
+  //       console.log(err.response)
+  //   })
+  // },[])
+
+  useEffect(()=>{
+    axios({
+        url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
+        method:'GET',
+        headers:{
+            "Authorization": `Bearer ${token}`
+        }
+    })
+    .then(success => {
+        console.log(success)
+        console.log(success.data)
+        setCartItem(success.data)
+        
+    })
+    .catch(err => console.log(err.response))
+  },[])
+  
   return (
     <div id = "navBarDiv">
       <div id = "navBarDivIn">
@@ -125,7 +167,7 @@ const NavBar = (props) => {
           </NavItem>
           <NavItem>
             <NavLink>
-              <a href = "#" style = {{color:"gray"}} >Cart<FiShoppingCart size = {22} color ={'gray'}></FiShoppingCart></a>
+              <a href = "#" style = {{color:"gray"}} onClick = {cartFunc}>Cart<FiShoppingCart size = {22} color ={'gray'}></FiShoppingCart></a>
             </NavLink>
           </NavItem>
         </Nav>
@@ -135,7 +177,7 @@ const NavBar = (props) => {
       </div>
       <SignUpModal modal = {signUpModal} setModal = {setSignUpModal}></SignUpModal>
       <LogInModal modal = {logInModal} setModal = {setLogInModal}></LogInModal>
-      <ShoppingCartModal ></ShoppingCartModal>
+      <ShoppingCartModal cartModal = {cartModal} setCartModal = {setCartModal} cartItem = {cartItem} setCartItem = {setCartItem}></ShoppingCartModal>
       
     </div>
   );

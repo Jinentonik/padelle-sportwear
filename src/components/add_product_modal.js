@@ -27,12 +27,13 @@ const AddProductModal = (props) => {
             url: 'https://padelle.herokuapp.com//api/v1/items/add_item',
             method: "POST",
             headers:{
-                Authorization: `Bearer ${localStorage.getItem("token")}`
+                Authorization: `Bearer ${token}`
             },
             data:{
                 "name": productName,
                 "product_type": productType,
                 "size": productSize,
+                "color":productColor,
                 "price": productPrice,
                 "stock": stockQty,
                 "image": imageFile.name

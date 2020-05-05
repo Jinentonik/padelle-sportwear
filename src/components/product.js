@@ -16,7 +16,7 @@ const Product = () => {
     
 
     useEffect(()=>{
-        axios.get('https://padelle.herokuapp.com/api/v1/items/items')
+        axios.get('https://padelle.herokuapp.com/api/v1/items/unique')
         .then(success => {
             console.log(success.data)
             setProducts(success.data)

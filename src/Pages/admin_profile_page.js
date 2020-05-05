@@ -19,6 +19,7 @@ const AdminProfilePage = () => {
 
     const toggle = () => setModal(!modal);
 
+    //list out all items in table
     useEffect(()=>{
         console.log('list all items')
         
@@ -115,7 +116,7 @@ const AdminProfilePage = () => {
                                                     <th scope="row">{idx+1}</th>
                                                     <td>{product.name}</td>
                                                     <td>{product.type}</td>
-                                                    <td></td>
+                                                    <td>{product.color}</td>
                                                     <td>{product.size}</td>
                                                     <td>{product.stock}</td>
                                                     <td>{product.price}</td>

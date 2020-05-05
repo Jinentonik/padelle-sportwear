@@ -2,14 +2,20 @@ import React, {useState} from 'react'
 import { TabContent, TabPane, Nav, NavItem, NavLink, Card, Button, CardTitle, CardText, Row, Col, Container } from 'reactstrap';
 import classnames from 'classnames';
 import {Link} from 'react-router-dom'
+import ChangePasswordModal from '../components/change_password_modal'
 
 const UserProfilePage = (props) => {
     const [activeTab, setActiveTab] = useState('1');
     const token = localStorage.getItem("token")
     const admin_status = localStorage.getItem("admin_status")
+    const [modal,setModal] = useState(false)
   
     const toggle = tab => {
       if(activeTab !== tab) setActiveTab(tab);
+    }
+
+    const toggleChangePasswordModal = () => {
+      setModal(!modal)
     }
   
     return (
@@ -41,18 +47,18 @@ const UserProfilePage = (props) => {
               <TabPane tabId="1">
                 <Card>
                 <Row>
-                  <Col sm="3" className="userProfileTitle">
+                  <Col xs="6" sm="3" className="userProfileTitle">
                     <h5 >Username:</h5>
                   </Col>
-                  <Col sm="3" className="userProfileContent">
+                  <Col xs="6" sm="3" className="userProfileContent">
                     <h5>matrix99</h5>
                   </Col>
                 </Row>
                 <Row>
-                  <Col sm="3" className="userProfileTitle">
+                  <Col xs="6" sm="3" className="userProfileTitle">
                     <h5>email:</h5>
                   </Col>
-                  <Col sm="3" className="userProfileContent">
+                  <Col  xs="6" sm="3" className="userProfileContent">
 
                     <h5>matrix99@matrix.com</h5>
                   </Col>
@@ -61,6 +67,13 @@ const UserProfilePage = (props) => {
                   
                 </Row>
                 </Card>
+                <Container>
+                  <Row>
+                    <Col sm="12">
+                      <Button onClick = {toggleChangePasswordModal}>Change password</Button>
+                    </Col>
+                  </Row>
+                </Container>
               
               </TabPane>
               <TabPane tabId="2">
@@ -92,6 +105,7 @@ const UserProfilePage = (props) => {
             </h5>
           </Container>
         }
+        <ChangePasswordModal modal={modal} setModal={setModal} ></ChangePasswordModal>
       </Container>
     );
   }
