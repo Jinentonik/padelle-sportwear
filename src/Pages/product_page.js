@@ -3,7 +3,7 @@ import {
     Card, Button, CardImg, CardTitle, CardText, CardDeck,
     CardSubtitle, CardBody, Container, Col
   } from 'reactstrap';
-import product1 from '../components/Images/female_sport3.jpg'
+// import product1 from '../components/Images/female_sport3.jpg'
 import ProductPagination from '../components/pagination'
 import axios from 'axios'
 import currency from '../components/Util/currency'
