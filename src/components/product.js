@@ -6,7 +6,7 @@ import {
 import product1 from './Images/female_sport3.jpg'
 import ProductPagination from './pagination'
 import axios from 'axios'
-
+import {Link } from 'react-router-dom'
 
 
 const Product = () => {
@@ -56,7 +56,9 @@ const Product = () => {
                                 <CardText>
                                     {item.type}
                                 </CardText>
-                                <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}} >Buy now</Button>
+                                    <Link to={`/product/${item.name}`}>
+                                        <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}} >Check this</Button>
+                                    </Link>
                             </CardBody>
                         </Card>
                     </Col>
