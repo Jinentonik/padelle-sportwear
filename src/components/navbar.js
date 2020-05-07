@@ -77,9 +77,13 @@ const NavBar = () => {
         }
     })
     .then(success => {
-        console.log(success)
-        console.log(success.data)
-        setCartItem(success.data)
+      let cartData = []
+      console.log(success)
+      console.log(success.data)
+      cartData = success.data
+      cartData.sort()
+      console.log('cartData', cartData)
+      setCartItem(success.data)
         
     })
     .catch(err => console.log(err.response))

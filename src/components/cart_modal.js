@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormFeedback, FormText, Col, Table} from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Row, Form, FormGroup, Label, Input, FormFeedback, FormText, Col, Table} from 'reactstrap';
 import axios from 'axios'
 import currency from '../components/Util/currency'
 
@@ -18,6 +18,30 @@ const ShoppingCart = (props) => {
 
     }
     
+
+    const deductItemAmount = (itemID) => {
+        console.log('deduct')
+        console.log(itemID)
+        axios({
+            url:`https://padelle.herokuapp.com/api/v1/cart/deduct/${itemID}`,
+            method:"POST"
+        })
+        .then(res=>console.log(res))
+        .catch(err=>console.log(err.response))
+    }
+
+    const addItemAmount = (itemID) => {
+        console.log('add')
+        axios({
+            url:`https://padelle.herokuapp.com/api/v1/cart/add/${itemID}`,
+            method:"POST"
+        })
+        .then(res=>{
+            console.log(res)
+            window.location.reload()
+        })
+        .catch(err=>console.log(err.response))
+    }
     return( 
         
         <Modal isOpen={cartModal} toggle={toggle} >
@@ -44,18 +68,23 @@ const ShoppingCart = (props) => {
                                                             <img src={item.item.image} style={{width:"100px"}}></img>
                                                         </div>
                                                         <div>
-                                                            <p>{item.item.name}</p>
-                                                            <p>{item.item.type}</p>
-                                                            <p>{item.item.size}</p>
-                                                            <p>{item.item.color}</p>
-                                                            <p>{currency.formatCurrency(item.item.price)}</p>
+                                                            <p style={{padding:"0px"}}>{item.item.name}</p>
+                                                            <p style={{padding:"0px"}}>{item.item.type}</p>
+                                                            <p style={{padding:"0px"}}>{item.item.size}</p>
+                                                            <p style={{padding:"0px"}}>{item.item.color}</p>
+                                                            <p style={{padding:"0px"}}>{currency.formatCurrency(item.item.price)}</p>
 
                                                         </div>
                                                     </div>
                                                 </th>
                                                 <td>
                                                     {/* <input type ="number" value = {item.cart.amount} onChange = {(e)=>{setQty(e.target.value)}} style={{width:"50px"}}></input> */}
-                                                    <p>{item.cart.amount}</p>
+                                                    <Row>
+                                                        <button onClick = {()=>deductItemAmount(item.cart.id)} style={{width:"fit-content", height:"fit-content", marginRight:"5%", color:"White", backgroundColor:"palevioletred", border:"none"}}>-</button>
+                                                        <p>{item.cart.amount}</p>
+                                                        <button onClick = {()=>addItemAmount(item.cart.id)} style={{width:"fit-content", height:"fit-content", marginLeft:"5%", color:"White", backgroundColor:"palevioletred", border:"none"}}>+</button>
+                                                    </Row>
+                                                    
                                                 </td>
                                                 <td>
                                                     {currency.formatCurrency(item.cart.amount * item.item.price)}

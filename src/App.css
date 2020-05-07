@@ -72,3 +72,10 @@ input[type=submit] {
   text-align: left;
 }
 
+.cartBtn {
+  width:"fit-content";
+  height:"fit-content";
+  background-color: "palevioletred";
+  color:"white";
+  border:"none"
+}
