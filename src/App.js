@@ -18,10 +18,11 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 function App() {
+  const [logInModal, setLogInModal] = useState(false)
   return (
     <div className="App">
     
-        <Navbar></Navbar>
+        <Navbar logInModal ={logInModal} setLogInModal={setLogInModal}></Navbar>
         <Route path='/' exact >
           <MainPic></MainPic>
           <Product></Product>
@@ -31,7 +32,7 @@ function App() {
         <Route path='/admin' component={AdminProfilePage}></Route>
         <Route path='/all_users' component={AllUsers}></Route>
         <Route path='/product/:name' >
-          <ProductDetailsPage ></ProductDetailsPage>
+          <ProductDetailsPage logInModal ={logInModal} setLogInModal={setLogInModal}></ProductDetailsPage>
         </Route>
         <Route path='/checkout' component={CheckOutPage}></Route>
         <div style = {{paddingTop:"10px", width:"100%", backgroundColor:"palevioletred", display:"flex", justifyContent: "space-between"}}>

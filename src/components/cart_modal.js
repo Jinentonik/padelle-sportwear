@@ -1,13 +1,15 @@
 import React, {useState, useEffect} from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Row, Form, FormGroup, Label, Input, FormFeedback, FormText, Col, Table} from 'reactstrap';
 import axios from 'axios'
+import {Link} from 'react-router-dom'
 import currency from '../components/Util/currency'
 
 const ShoppingCart = (props) => {
     
-    const {cartModal, setCartModal, cartItem, setCartItem} = props
-    const [qty, setQty] = useState(1)
+    const {cartModal, setCartModal} = props
+    const [cartItem, setCartItem] = useState([])
     let totalCartAmount = 0
+    let token = localStorage.getItem('token')
     const toggle = () => {
         // console.log(modal) 
         setCartModal(!cartModal);
@@ -17,6 +19,27 @@ const ShoppingCart = (props) => {
         totalCartAmount = totalCartAmount + cartItem[i].cart.amount * cartItem[i].item.price
 
     }
+
+    useEffect(()=>{
+        axios({
+            url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
+            method:'GET',
+            headers:{
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(success => {
+          let cartData = []
+          console.log(success)
+          console.log(success.data)
+          cartData = success.data
+          cartData.sort()
+          console.log('cartData', cartData)
+          setCartItem(success.data)
+            
+        })
+        .catch(err => console.log(err.response))
+      },[])
     
 
     const deductItemAmount = (itemID) => {
@@ -26,7 +49,27 @@ const ShoppingCart = (props) => {
             url:`https://padelle.herokuapp.com/api/v1/cart/deduct/${itemID}`,
             method:"POST"
         })
-        .then(res=>console.log(res))
+        .then(res=>{
+            //update cart after deducting and item
+            axios({
+                url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
+                method:'GET',
+                headers:{
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            .then(success => {
+              let cartData = []
+              console.log(success)
+              console.log(success.data)
+              cartData = success.data
+              cartData.sort()
+              console.log('cartData', cartData)
+              setCartItem(success.data)
+                
+            })
+            .catch(err => console.log(err.response))
+        })
         .catch(err=>console.log(err.response))
     }
 
@@ -37,8 +80,25 @@ const ShoppingCart = (props) => {
             method:"POST"
         })
         .then(res=>{
-            console.log(res)
-            window.location.reload()
+            //reload cart item after adding an item
+            axios({
+                url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
+                method:'GET',
+                headers:{
+                    "Authorization": `Bearer ${token}`
+                }
+            })
+            .then(success => {
+              let cartData = []
+              console.log(success)
+              console.log(success.data)
+              cartData = success.data
+              cartData.sort()
+              console.log('cartData', cartData)
+              setCartItem(success.data)
+                
+            })
+            .catch(err => console.log(err.response))
         })
         .catch(err=>console.log(err.response))
     }
@@ -53,6 +113,7 @@ const ShoppingCart = (props) => {
                             <thead>
                                 <tr>
                                 <th>Product</th>
+                                <th>Description</th>
                                 <th>Quantity</th>
                                 <th>Total</th>
                                 </tr>
@@ -63,23 +124,20 @@ const ShoppingCart = (props) => {
                                         return(
                                             <tr>
                                                 <th scope="row">
-                                                    <div style={{display:"flex"}}>
-                                                        <div style = {{padding:"5px"}}>
-                                                            <img src={item.item.image} style={{width:"100px"}}></img>
-                                                        </div>
-                                                        <div>
-                                                            <p style={{padding:"0px"}}>{item.item.name}</p>
-                                                            <p style={{padding:"0px"}}>{item.item.type}</p>
-                                                            <p style={{padding:"0px"}}>{item.item.size}</p>
-                                                            <p style={{padding:"0px"}}>{item.item.color}</p>
-                                                            <p style={{padding:"0px"}}>{currency.formatCurrency(item.item.price)}</p>
-
-                                                        </div>
-                                                    </div>
+                                                    <img src={item.item.image} style={{width:"100px"}}></img>
+                                                            
                                                 </th>
                                                 <td>
+                                                    <p style={{padding:"0px"}}>{item.item.name}</p>
+                                                    <p style={{padding:"0px"}}>{item.item.type}</p>
+                                                    <p style={{padding:"0px"}}>{item.item.size}</p>
+                                                    <p style={{padding:"0px"}}>{item.item.color}</p>
+                                                    <p style={{padding:"0px"}}>{currency.formatCurrency(item.item.price)}</p>
+
+                                                </td>
+                                                <td>
                                                     {/* <input type ="number" value = {item.cart.amount} onChange = {(e)=>{setQty(e.target.value)}} style={{width:"50px"}}></input> */}
-                                                    <Row>
+                                                    <Row style={{justifyContent:"center"}}>
                                                         <button onClick = {()=>deductItemAmount(item.cart.id)} style={{width:"fit-content", height:"fit-content", marginRight:"5%", color:"White", backgroundColor:"palevioletred", border:"none"}}>-</button>
                                                         <p>{item.cart.amount}</p>
                                                         <button onClick = {()=>addItemAmount(item.cart.id)} style={{width:"fit-content", height:"fit-content", marginLeft:"5%", color:"White", backgroundColor:"palevioletred", border:"none"}}>+</button>
@@ -111,7 +169,9 @@ const ShoppingCart = (props) => {
                 </ModalBody>
                 <ModalFooter>
                     {/* <Button style = {{backgroundColor:"palevioletred", color: "white"}}>Sign Up</Button> */}
-                    <Input color="primary" type = "submit"  value = "Check Out" id = "signUpBtn" ></Input>
+                    <Link to='/checkout' onClick={toggle}>
+                        <Input color="primary" type = "submit"  value = "Check Out" style={{color:"white"}} ></Input>
+                    </Link>
                 </ModalFooter>
         </Modal>
         

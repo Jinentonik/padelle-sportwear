@@ -4,7 +4,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 const SignUpModal = (props) => {
-    const {modal, setModal} = props
+    const {modal, setModal, logInModal, setLogInModal} = props
     const [username, setUsername] = useState('')
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -22,9 +22,20 @@ const SignUpModal = (props) => {
         }
         
     }
+    //toggle log in modal and close sign up modal
+    const toggleLogInModal = () => {
+        setModal(!modal)
+        setLogInModal(!logInModal)
+    }
 
+    //toggle sign up modal
     const toggle = () => {
         setModal(!modal);
+        setPasswordType('password')
+        setUsername('')
+        setPassword('')
+        setEmail('')
+        setConfirmPassword('')
     }
 
     const invalidPasswordFunc = () => {
@@ -120,6 +131,7 @@ const SignUpModal = (props) => {
             console.log('********')
             toast.success('You have successfully sign up',{position:"top-right"})
             toggle()
+            setLogInModal(true)
             
         })
         .catch(
@@ -181,6 +193,7 @@ const SignUpModal = (props) => {
                         <Label for="confirm_password">Confirm Password</Label>
                         <Input type="password" name="confirm_password" id="confirm_password" onChange = {(e)=>{setConfirmPassword(e.target.value)}} valid = {validPasswordFunc()} invalid = {invalidPasswordFunc()}/>
                     </FormGroup>
+                    <a href="#" onClick={toggleLogInModal}>Already have an account?</a>
                 </ModalBody>
                 <ModalFooter>
                     {/* <Button style = {{backgroundColor:"palevioletred", color: "white"}}>Sign Up</Button> */}

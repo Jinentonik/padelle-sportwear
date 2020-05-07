@@ -4,7 +4,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 
 const LogInModal = (props) => {
-    const {modal, setModal} = props
+    const {modal, setModal, signUpModal, setSignUpModal} = props
     const [passwordType, setPasswordType] = useState('password')
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -16,9 +16,16 @@ const LogInModal = (props) => {
             return true
         }
     }
+    const toggleSignUp = () => {
+        setModal(!modal)
+        setSignUpModal(!signUpModal)
+    }
     const toggle = () => {
         // console.log(modal) 
         setModal(!modal);
+        setPasswordType('password')
+        setUsername('')
+        setPassword('')
     }
 
     const showPasswordFunc = () => {
@@ -78,11 +85,12 @@ const LogInModal = (props) => {
                         <input type="checkbox"  id = "showpassword_check" onClick = {showPasswordFunc}/>
                         <Label for="showpassword_check">Show password</Label>
                     </FormGroup>
+                    <a href="#" onClick={toggleSignUp}>Don't have an account?</a>
                         
                 </ModalBody>
                 <ModalFooter>
                     {/* <Button style = {{backgroundColor:"palevioletred", color: "white"}}>Sign Up</Button> */}
-                    <Input disabled={validateForm()} color="primary" type = "submit"  value = "Log In" id = "signUpBtn" ></Input>
+                    <Input disabled={validateForm()} color="primary" type = "submit"  value = "Log In" id = "logInBtn" ></Input>
                 </ModalFooter>
             </Form>
         </Modal>

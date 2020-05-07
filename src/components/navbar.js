@@ -22,15 +22,15 @@ import ShoppingCartModal from './cart_modal'
 import axios from 'axios';
 
 
-
-const NavBar = () => {
+const NavBar = (props) => {
+  const {logInModal, setLogInModal} = props
   const [cartItem, setCartItem] = useState([])
   const [isOpen, setIsOpen] = useState(false);
   const [signUpModal, setSignUpModal] = useState(false)
-  const [logInModal, setLogInModal] = useState(false)
+  // const [logInModal, setLogInModal] = useState(false)
   const [cartModal, setCartModal] = useState(false)
   const history = useHistory();
-  const token = localStorage.getItem("token")
+  const [token,setToken] = useState(localStorage.getItem("token"))
   const admin_status = localStorage.getItem("admin_status")
 
   const toggle = () => {
@@ -42,6 +42,8 @@ const NavBar = () => {
   const toggleLogInModal = () => setLogInModal(!logInModal)
 
   const logoutFunc = () =>{
+    console.log('logout')
+    setToken(null)
     localStorage.removeItem("token")
     localStorage.removeItem("admin_status")
     history.push("/");
@@ -86,7 +88,12 @@ const NavBar = () => {
       setCartItem(success.data)
         
     })
-    .catch(err => console.log(err.response))
+    .catch(err => {
+      console.log(err.response)
+      setToken(null)
+      localStorage.removeItem("token")
+      localStorage.removeItem("admin_status")
+    })
   },[])
   
   return (
@@ -179,8 +186,8 @@ const NavBar = () => {
         </Collapse>
       </Navbar>
       </div>
-      <SignUpModal modal = {signUpModal} setModal = {setSignUpModal}></SignUpModal>
-      <LogInModal modal = {logInModal} setModal = {setLogInModal}></LogInModal>
+      <SignUpModal modal = {signUpModal} setModal = {setSignUpModal} logInModal = {logInModal} setLogInModal={setLogInModal}></SignUpModal>
+      <LogInModal modal = {logInModal} setModal = {setLogInModal} signUpModal = {signUpModal} setSignUpModal = {setSignUpModal}></LogInModal>
       <ShoppingCartModal cartModal = {cartModal} setCartModal = {setCartModal} cartItem = {cartItem} setCartItem = {setCartItem}></ShoppingCartModal>
       
     </div>

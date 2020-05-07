@@ -1,15 +1,14 @@
 import React, {useEffect, useState} from 'react'
 import {useParams} from "react-router-dom"
-import {Container, Col, Row, Form, FormGroup, Label, Input } from 'reactstrap'
+import {Container, Col, Row, Form, FormGroup, Label, Input, Button } from 'reactstrap'
 import product1 from '../components/Images/female_sport3.jpg'
 import axios from 'axios'
 
 
 const ProductDetailsPage =(props) => {
-    const {cartItem, setCartItem} = props
+    const {logInModal, setLogInModal} = props
     const {name} = useParams()
     const [product,setProduct] = useState('')
-    const [sort,setSort] = useState('')
     const [productName, setProductName] = useState('')
     const [productImage, setProductImage] = useState('')
     const [productType, setProductType] = useState('')
@@ -19,6 +18,8 @@ const ProductDetailsPage =(props) => {
     const [selectSize, setSelectSize] = useState('')
     const [selectColor, setSelectColor] = useState('')
     const [productInfoList, setProductInfoList] = useState([])
+
+    
     let token = localStorage.getItem("token")
 
     useEffect(()=>{
@@ -61,98 +62,39 @@ const ProductDetailsPage =(props) => {
     },[])
 
 
-
-    
-
-    // const submitFunc2 = (e) => {
-    //     e.preventDefault()
-    //     console.log('add to cart')
-    //     console.log(cartItem)
-    //     //using database
-    //     axios({
-    //         url:"https://padelle.herokuapp.com/api/v1/cart",
-    //         method:"POST",
-    //         data:{
-    //             "user":"1",
-    //             "item":product.id
-    //         }
-    //     })
-    //     .then(success=>console.log(success))
-    //     .catch(err=>console.log(err))
-
-    //     //without using database
-    //     if(cartItem.length === 0){
-    //         setCartItem(
-    //         [
-    //             {
-                    
-    //                 "name":product.name,
-    //                 "type":product.type,
-    //                 "count":1,
-    //             }
-    //         ]
-    //         )
-    //     }else{
-    //         let check = false
-    //         let index = 0
-    //         for(let i = 0; i < cartItem.length; i++){
-    //             if(id === cartItem[i].id){
-    //                 check = true
-    //                 index = i
-    //                 // cartItem[i].count = cartItem[i].count + 1
-    //             }
-    //         }
-
-    //         if(check){
-    //             cartItem[index]["count"] = cartItem[index]["count"] + 1
-    //         }else{
-    //             setCartItem(
-    //                 [...cartItem, 
-    //                     {
-    //                         "id":id,
-    //                         "name":product.name,
-    //                         "type":product.type,
-    //                         "count":1
-                        
-    //                     }
-    //                 ]
-    //             )
-    //         }
-    //     }
-        
-
-        
-    // }
-    
-
-
     const submitFunc = (e) =>{
         
         e.preventDefault()
-        
-        let product_id = 0
 
-        for(let i = 0; i < productInfoList.length; i++){
-            if(productInfoList[i].color === selectColor && productInfoList[i].size === selectSize){
-                product_id = productInfoList[i].id
+        if(token !== null){
+            let product_id = 0
+            //for loop to find the product id of the item based on color and size
+            for(let i = 0; i < productInfoList.length; i++){
+                if(productInfoList[i].color === selectColor && productInfoList[i].size === selectSize){
+                    product_id = productInfoList[i].id
+                }
             }
-        }
+            
+            axios({
+                url:'https://padelle.herokuapp.com/api/v1/cart/add_new_item',
+                method:"POST",
+                headers:{
+                    "Authorization": `Bearer ${token}`
+                },
+                data:{
+                    "item": product_id
+                }
+            })
+            .then(success=>{
+                console.log(success)
+                window.location.reload()
+            })
+            .catch(err=>console.log(err.response))
+        }else{
+            console.log('you need to log in before you can proceed.')
+            setLogInModal(!logInModal)
+            }
         
-        axios({
-            url:'https://padelle.herokuapp.com/api/v1/cart/add_new_item',
-            method:"POST",
-            headers:{
-                "Authorization": `Bearer ${token}`
-            },
-            data:{
-                "item": product_id
-            }
-        })
-        .then(success=>{
-            console.log(success)
-            window.location.reload()
-        })
-        .catch(err=>console.log(err.response))
     }
 
     
@@ -168,7 +110,6 @@ const ProductDetailsPage =(props) => {
                         <h4>
                             {productName}
                         </h4>
-                        
                         
                     </Row>
                     <Row style={{display:"flex", justifyContent:"center"}}>
@@ -233,11 +174,17 @@ const ProductDetailsPage =(props) => {
                             </Input>
                             </Col>
                         </FormGroup>
+                        {
+                            token !== null?
+                            <Input type="submit" value="Add to cart" ></Input>
+                            :
+                            <Input type="submit" value="Log In"></Input>
+                        }
                         
-                        <Input type="submit" value="Add to cart" ></Input>
                     </Form>
                 </Col>
             </Row>
+            
             
         </Container>
     )
