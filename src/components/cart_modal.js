@@ -9,7 +9,7 @@ const ShoppingCart = (props) => {
     const {cartModal, setCartModal} = props
     const [cartItem, setCartItem] = useState([])
     let totalCartAmount = 0
-    let token = localStorage.getItem('token')
+    const [token, setToken] = useState(localStorage.getItem('token'))
     const toggle = () => {
         // console.log(modal) 
         setCartModal(!cartModal);
@@ -33,14 +33,59 @@ const ShoppingCart = (props) => {
           console.log(success)
           console.log(success.data)
           cartData = success.data
-          cartData.sort()
+          cartData.sort((a, b)=>{
+            if(a.cart.id > b.cart.id){
+                return 1
+            }else{
+                return -1
+            }
+            }
+          )
           console.log('cartData', cartData)
           setCartItem(success.data)
             
         })
-        .catch(err => console.log(err.response))
+        .catch(err => {
+            console.log(err.response)
+            setToken(null)
+            localStorage.removeItem("token")
+            localStorage.removeItem("admin_status")
+            
+        })
       },[])
     
+    const getCartItem = () => {
+        axios({
+            url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
+            method:'GET',
+            headers:{
+                "Authorization": `Bearer ${token}`
+            }
+        })
+        .then(success => {
+          let cartData = []
+          console.log(success)
+          console.log('raw',success.data)
+          cartData = success.data
+          cartData.sort((a, b)=>{
+            if(a.cart.id > b.cart.id){
+                return 1
+            }else{
+                return -1
+            }
+            }
+          )
+          console.log('cartData', cartData)
+        //   setCartItem(success.data)
+        setCartItem(cartData)
+            
+        })
+        .catch(err => console.log(err.response))
+    }
+
+    
+
+
 
     const deductItemAmount = (itemID) => {
         console.log('deduct')
@@ -51,24 +96,7 @@ const ShoppingCart = (props) => {
         })
         .then(res=>{
             //update cart after deducting and item
-            axios({
-                url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
-                method:'GET',
-                headers:{
-                    "Authorization": `Bearer ${token}`
-                }
-            })
-            .then(success => {
-              let cartData = []
-              console.log(success)
-              console.log(success.data)
-              cartData = success.data
-              cartData.sort()
-              console.log('cartData', cartData)
-              setCartItem(success.data)
-                
-            })
-            .catch(err => console.log(err.response))
+            getCartItem()
         })
         .catch(err=>console.log(err.response))
     }
@@ -81,26 +109,24 @@ const ShoppingCart = (props) => {
         })
         .then(res=>{
             //reload cart item after adding an item
-            axios({
-                url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
-                method:'GET',
-                headers:{
-                    "Authorization": `Bearer ${token}`
-                }
-            })
-            .then(success => {
-              let cartData = []
-              console.log(success)
-              console.log(success.data)
-              cartData = success.data
-              cartData.sort()
-              console.log('cartData', cartData)
-              setCartItem(success.data)
-                
-            })
-            .catch(err => console.log(err.response))
+            getCartItem()
         })
         .catch(err=>console.log(err.response))
+    }
+
+    const removeItem = (itemID) => {
+        console.log('remove')
+        axios({
+            url:`https://padelle.herokuapp.com/api/v1/cart/delete/id`,
+            method:'POST',
+            data:{
+                "id":itemID
+            }
+        })
+        .then(success => {
+            getCartItem()
+        })
+        .catch(err => console.log(err.response))
     }
     return( 
         
@@ -112,10 +138,11 @@ const ShoppingCart = (props) => {
                         <Table>
                             <thead>
                                 <tr>
-                                <th>Product</th>
-                                <th>Description</th>
-                                <th>Quantity</th>
-                                <th>Total</th>
+                                    <th>Product</th>
+                                    <th>Description</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -146,6 +173,11 @@ const ShoppingCart = (props) => {
                                                 </td>
                                                 <td>
                                                     {currency.formatCurrency(item.cart.amount * item.item.price)}
+                                                </td>
+                                                <td>
+                                                    <Row style={{justifyContent:"center"}}>
+                                                        <button onClick={()=>removeItem(item.cart.id)} style={{width:"fit-content", height:"fit-content", marginLeft:"5%", color:"White", backgroundColor:"palevioletred", border:"none"}}>Remove</button>
+                                                    </Row>
                                                 </td>
                                             </tr>
                                         )

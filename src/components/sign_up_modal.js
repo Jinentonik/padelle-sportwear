@@ -122,7 +122,8 @@ const SignUpModal = (props) => {
             data:{
                 'username': username,
                 'password': password,
-                'email': email
+                'email': email,
+                'mailing_list': true
             }
         })
         .then(res => {

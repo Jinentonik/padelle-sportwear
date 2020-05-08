@@ -3,10 +3,11 @@ import DropIn from "braintree-web-drop-in-react";
 import {Row, Col, Container, Table, Button} from "reactstrap"
 import axios from 'axios'
 import currency from '../components/Util/currency'
+import { toast } from 'react-toastify'
 
 const CheckOutPage = () => {
-	const [token, setToken] = useState(null)
-	let auth_token = localStorage.getItem("token")
+	const [token, setToken] = useState(null)//client token from braintree
+	const [auth_token, setAuthToken] = useState(localStorage.getItem('token')) //token receive after login
 	const [instance, setInstance] = useState('')
 	const [cartItem, setCartItem] = useState([])
 	let totalCartAmount = 0
@@ -31,16 +32,15 @@ const CheckOutPage = () => {
 		})
 		.catch(err=>{
 			console.log(err.response)
+			
 		})
 	},[])
-	console.log("token", token)
 
 	//make payment to braintree
 	let makePayment = () => {
 		console.log(instance)
 		
 		instance.requestPaymentMethod(function (err, payload){
-			
 			if(err){
 				console.log(err)
 			}else{
@@ -60,6 +60,7 @@ const CheckOutPage = () => {
 				})
 				.then(res=>{
 					console.log(res)
+					toast.success('You have successfully paid',{position:"top-right"})
 				})
 				.catch(err=>console.log(err.response))
 			}
@@ -83,14 +84,58 @@ const CheckOutPage = () => {
 		  console.log(success)
 		  console.log(success.data)
 		  cartData = success.data
-		  cartData.sort()
+		  cartData.sort((a, b)=>{
+            if(a.cart.id > b.cart.id){
+                return 1
+            }else{
+                return -1
+            }
+            }
+          )
 		  console.log('cartData', cartData)
 		  setCartItem(success.data)
 			
 		})
-		.catch(err => console.log(err.response))
+		.catch(err => {
+			console.log(err.response)
+			setAuthToken(null)
+            localStorage.removeItem("token")
+            localStorage.removeItem("admin_status")
+		})
 	  },[])
 
+	  const getCartItem = () => {
+		axios({
+			url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
+			method:'GET',
+			headers:{
+				"Authorization": `Bearer ${auth_token}`
+			}
+		})
+		.then(success => {
+		  let cartData = []
+		  console.log(success)
+		  console.log(success.data)
+		  cartData = success.data
+		  cartData.sort((a, b)=>{
+            if(a.cart.id > b.cart.id){
+                return 1
+            }else{
+                return -1
+            }
+            }
+          )
+		  console.log('cartData', cartData)
+		  setCartItem(success.data)
+			
+		})
+		.catch(err => {
+			console.log(err.response)
+			setAuthToken(null)
+            localStorage.removeItem("token")
+            localStorage.removeItem("admin_status")
+		})
+	  }
 		//deduct item in cart
 	const deductItemAmount = (itemID) => {
 		console.log('deduct')
@@ -100,24 +145,7 @@ const CheckOutPage = () => {
 			method:"POST"
 		})
 		.then(res=>{
-			axios({
-                url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
-                method:'GET',
-                headers:{
-                    "Authorization": `Bearer ${auth_token}`
-                }
-            })
-            .then(success => {
-              let cartData = []
-              console.log(success)
-              console.log(success.data)
-              cartData = success.data
-              cartData.sort()
-              console.log('cartData', cartData)
-              setCartItem(success.data)
-                
-            })
-            .catch(err => console.log(err.response))
+			getCartItem()
 		})
 		.catch(err=>console.log(err.response))
 	}
@@ -130,26 +158,23 @@ const CheckOutPage = () => {
 			method:"POST"
 		})
 		.then(res=>{
-			axios({
-                url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
-                method:'GET',
-                headers:{
-                    "Authorization": `Bearer ${auth_token}`
-                }
-            })
-            .then(success => {
-              let cartData = []
-              console.log(success)
-              console.log(success.data)
-              cartData = success.data
-              cartData.sort()
-              console.log('cartData', cartData)
-              setCartItem(success.data)
-                
-            })
-            .catch(err => console.log(err.response))
+			getCartItem()
 		})
 		.catch(err=>console.log(err.response))
+	}
+
+	const removeItem = (itemID) => {
+		axios({
+            url:`https://padelle.herokuapp.com/api/v1/cart/delete/id`,
+            method:'POST',
+            data:{
+                "id":itemID
+            }
+        })
+        .then(success => {
+            getCartItem()
+        })
+        .catch(err => console.log(err.response))
 	}
 	
 		if (!token) {
@@ -171,6 +196,7 @@ const CheckOutPage = () => {
 									<th>Description</th>
 									<th>Quantity</th>
 									<th>Total</th>
+									<th></th>
 									</tr>
 								</thead>
 								<tbody>
@@ -212,6 +238,11 @@ const CheckOutPage = () => {
                                                 </td>
                                                 <td>
                                                     {currency.formatCurrency(item.cart.amount * item.item.price)}
+                                                </td>
+												<td>
+                                                    <Row style={{justifyContent:"center"}}>
+                                                        <button onClick={()=>removeItem(item.cart.id)} style={{width:"fit-content", height:"fit-content", marginLeft:"5%", color:"White", backgroundColor:"palevioletred", border:"none"}}>Remove</button>
+                                                    </Row>
                                                 </td>
                                             </tr>
                                         )

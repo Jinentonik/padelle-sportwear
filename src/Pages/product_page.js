@@ -74,9 +74,7 @@ const ProductPage = () =>{
         .catch(err => console.log(err))
     },[])
 
-    const addToCart = () => {
-
-    }
+    
 
     const indexOfLastProduct = currentPage * productPerPage
     const indexOfFirstProduct = indexOfLastProduct - productPerPage

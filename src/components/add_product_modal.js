@@ -74,7 +74,7 @@ const AddProductModal = (props) => {
             setStockQty('')
             setImageFile(null)
             toggle()
-            // window.location.reload()
+            window.location.reload()
         })
         .catch(err => {
             console.log('error happen')

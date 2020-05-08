@@ -53,23 +53,6 @@ const NavBar = (props) => {
     setCartModal(!cartModal)
   }
 
-  // useEffect(()=>{
-  //   axios({
-  //       url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
-  //       method:'GET',
-  //       headers:{
-  //           "Authorization": `Bearer ${token}`
-  //       }
-  //   })
-  //   .then(res=>{ 
-  //       console.log(res)
-  //       setCartItem(["hello"])
-  //   })
-  //   .catch(err=>{
-  //       console.log(err.response)
-  //   })
-  // },[])
-
   useEffect(()=>{
     axios({
         url:'https://padelle.herokuapp.com/api/v1/cart/user/cart',
