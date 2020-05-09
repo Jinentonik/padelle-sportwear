@@ -29,7 +29,7 @@ const LogInModal = (props) => {
     }
 
     const showPasswordFunc = () => {
-        console.log('clicked')
+        // console.log('clicked')
         if(passwordType === 'password'){
             setPasswordType('text')
         }else{
@@ -39,8 +39,7 @@ const LogInModal = (props) => {
 
     const submitLogIn = (e) => {
         e.preventDefault()
-        console.log(username)
-        console.log(password)
+        
         axios({
             url: 'https://padelle.herokuapp.com/api/v1/users/login',
             method: "POST",
@@ -53,8 +52,8 @@ const LogInModal = (props) => {
             }
         })
         .then(success => {
-            console.log(success)
-            console.log(success.data.auth_token)
+            // console.log(success)
+            // console.log(success.data.auth_token)
             localStorage.setItem("token", success.data.auth_token)
             localStorage.setItem("admin_status", success.data.user.Admin_status )
             toast.info(`Welcome back ${success.data.user.username}!`)
@@ -63,7 +62,7 @@ const LogInModal = (props) => {
             window.location.reload()
         })
         .catch(error => {
-            console.log(error)
+            console.log(error.response)
             toast.warning(`Invalid login!`)
         })
         setUsername('')

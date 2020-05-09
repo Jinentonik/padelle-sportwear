@@ -57,12 +57,12 @@ FaFacebookSquare {
 
 input[type=submit]:disabled {
   background: #dddddd;
-  color: "black"
+  color: black
 }
 
 input[type=submit] {
   background: palevioletred;
-  color: "white"
+  color: white
 }
 
 .userProfileTitle{

@@ -20,8 +20,6 @@ const AddProductModal = (props) => {
 
     const addProductFunc = (e) => {
         e.preventDefault()
-        console.log('token', token)
-        console.log(productName,productType,productSize,productPrice,stockQty,imageFile.name)
         
         axios({
             url: 'https://padelle.herokuapp.com//api/v1/items/add_item',
@@ -74,7 +72,7 @@ const AddProductModal = (props) => {
             setStockQty('')
             setImageFile(null)
             toggle()
-            window.location.reload()
+            window.location.reload() 
         })
         .catch(err => {
             console.log('error happen')
@@ -84,7 +82,7 @@ const AddProductModal = (props) => {
 
     return(
         <Modal isOpen={modal} toggle={toggle} >
-                <ModalHeader toggle={toggle}>Modal title</ModalHeader>
+                <ModalHeader toggle={toggle}>Add New Product</ModalHeader>
                 <ModalBody>
                     <Form onSubmit={(e)=>addProductFunc(e)}>
                         <FormGroup>

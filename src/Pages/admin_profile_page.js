@@ -21,7 +21,6 @@ const AdminProfilePage = () => {
 
     //list out all items in table
     useEffect(()=>{
-        console.log('list all items')
         
         axios.get('https://padelle.herokuapp.com/api/v1/items/items')
         .then(success => {
@@ -32,39 +31,18 @@ const AdminProfilePage = () => {
         .catch(err => console.log(err))
     },[])
 
-    const handleFile = (e)=> {
-        setImageFile(e.target.files[0])
-    }
     
-    const uploadImageTest=()=>{
-        let formData = new FormData()
-        formData.append("img", imageFile)
-        console.log(token)
-
+    const removeItem = (itemID) => {
+        console.log(itemID)
         axios({
-            url:'https://padelle.herokuapp.com/api/v1/items/upload_item_image',
-            method: "POST",
-            headers:{
-                "Authorization": `Bearer ${token}`
-            },
-            data: formData
-
-
-        })
-        .then(success=>{
-            console.log(success)
-        })
-        .catch(err=>{
-            console.log(err)
+            url:`https://padelle.herokuapp.com/api/v1/items/delete/`
         })
     }
 
     return(
         <div>
-            <Input type = "file" onClick={(e)=> handleFile(e)}></Input>
-            <Button onClick={uploadImageTest}>Upload Image</Button>
+            <Button onClick={toggle} style={{margin:"10px"}}>Add product</Button>
 
-            <Button onClick={toggle}>Add product</Button>
             <AddProductModal modal={modal} setmodal={setModal} toggle = {toggle}></AddProductModal>
             
             <Container>
@@ -124,8 +102,8 @@ const AdminProfilePage = () => {
                                                         <img src = {product.image_url} style = {{width:"100px"}}></img>
                                                     </td>
                                                     <td>
-                                                        <Button>Edit</Button>
-                                                        <Button color="danger">Delete</Button>
+                                                        {/* <Button style={{margin:"10px"}}>Edit</Button> */}
+                                                        <Button color="danger" style={{margin:"10px"}} onClick={()=>removeItem(product.id)}>Delete</Button>
                                                     </td>
                                                     </tr>
                                                     

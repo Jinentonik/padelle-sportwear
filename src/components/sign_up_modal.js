@@ -39,7 +39,6 @@ const SignUpModal = (props) => {
     }
 
     const invalidPasswordFunc = () => {
-        console.log(password, confirmPassword)
         if(password === confirmPassword){
             return false
         }else{
@@ -127,9 +126,6 @@ const SignUpModal = (props) => {
             }
         })
         .then(res => {
-            console.log('Success')
-            console.log(res)
-            console.log('********')
             toast.success('You have successfully sign up',{position:"top-right"})
             toggle()
             setLogInModal(true)
@@ -137,10 +133,7 @@ const SignUpModal = (props) => {
         })
         .catch(
             err => {
-                console.log('Error')
-                console.log(err)
                 console.log(err.response)
-                console.log('***********')
                 toast.warning(`Something's wrong.`)
 
             }
