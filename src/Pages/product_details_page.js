@@ -203,7 +203,7 @@ const ProductDetailsPage =(props) => {
                             </Label>
                         </Col>
                         <Col sm={4}>
-                            <h5>{currency.formatCurrency(productPrice)}</h5>
+                            <h5>{currency.formatCurrency(Number(productPrice))}</h5>
                         </Col> 
                     </FormGroup>
                     
