@@ -9,6 +9,7 @@ import axios from 'axios'
 import currency from '../components/Util/currency'
 import Filter from '../components/Filter'
 import {Link } from 'react-router-dom'
+import Loading from '../components/loading'
 
 const ProductPage = () =>{
 
@@ -17,6 +18,7 @@ const ProductPage = () =>{
     const [products, setProducts] = useState([])
     const [filteredProducts, setFilteredProducts] = useState([])
     const [sort, setSort] = useState('')
+    const [loading, setLoading] = useState(true)
     
     
     console.log('product page', sort)
@@ -68,6 +70,7 @@ const ProductPage = () =>{
         .then(success => {
             setProducts(success.data)
             setFilteredProducts(success.data)
+            setLoading(false)
             // productList()
             
         })
@@ -80,48 +83,57 @@ const ProductPage = () =>{
     const indexOfFirstProduct = indexOfLastProduct - productPerPage
     const currentProducts = filteredProducts.slice(indexOfFirstProduct, indexOfLastProduct)
 
-    return(
-        <Container>
-          <Container style = {{padding:"25px"}}>
-            <h2>
-                Product
-            </h2>
+    if(loading){
+        return(
+            <Container style={{height:"500px"}}>
+                <Loading></Loading>
+            </Container>
+        )
+    }else{
+        return(
+            <Container >
+              <Container style = {{padding:"25px"}}>
+                <h2>
+                    Product
+                </h2>
+              </Container>
+              <Filter sort={sort} setSort = {setSort} sortHandle = {sortHandle}></Filter>
+            <CardDeck>
+                {currentProducts.map((item)=>{
+                    return(
+                        <Col xs="12" md ="6" lg="4" id = {item.id}>
+                        <Card style = {{minWidth:"300px", marginBottom:"25px"}} >
+                            <CardImg top  height="300px" src={item.image_url} alt="Card image cap" />
+                            <CardBody>
+                                <CardTitle>
+                                    <h3>
+                                        {item.name}
+                                    </h3>
+                                </CardTitle>
+                                <CardSubtitle>
+                                    <h4>
+                                        {currency.formatCurrency(item.price)}
+                                    </h4>
+                                </CardSubtitle>
+                                <CardText>
+                                    {item.type}
+                                </CardText>
+                                <Link to={`/product/${item.name}`}>
+                                    <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}} >Check this</Button>
+    
+                                </Link>    
+                            </CardBody>
+                        </Card>
+                        </Col>
+                    )
+                })}           
+                
+            </CardDeck>
+            <ProductPagination productPerPage={productPerPage} totalProducts={products.length} setCurrentPage={setCurrentPage} currentPage = {currentPage}></ProductPagination>
           </Container>
-          <Filter sort={sort} setSort = {setSort} sortHandle = {sortHandle}></Filter>
-        <CardDeck>
-            {currentProducts.map((item)=>{
-                return(
-                    <Col xs="12" md ="6" lg="4" id = {item.id}>
-                    <Card style = {{minWidth:"300px", marginBottom:"25px"}} >
-                        <CardImg top  height="300px" src={item.image_url} alt="Card image cap" />
-                        <CardBody>
-                            <CardTitle>
-                                <h3>
-                                    {item.name}
-                                </h3>
-                            </CardTitle>
-                            <CardSubtitle>
-                                <h4>
-                                    {currency.formatCurrency(item.price)}
-                                </h4>
-                            </CardSubtitle>
-                            <CardText>
-                                {item.type}
-                            </CardText>
-                            <Link to={`/product/${item.name}`}>
-                                <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}} >Check this</Button>
-
-                            </Link>    
-                        </CardBody>
-                    </Card>
-                    </Col>
-                )
-            })}           
-            
-        </CardDeck>
-        <ProductPagination productPerPage={productPerPage} totalProducts={products.length} setCurrentPage={setCurrentPage} currentPage = {currentPage}></ProductPagination>
-      </Container>
-    )
+        )
+    }
+    
 }
 
 export default ProductPage

@@ -7,12 +7,13 @@ import product1 from './Images/female_sport3.jpg'
 import ProductPagination from './pagination'
 import axios from 'axios'
 import {Link } from 'react-router-dom'
-
+import Loading from './loading'
 
 const Product = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [productPerPage] = useState(3)
     const [products, setProducts] = useState([])
+    const [loading,setLoading] = useState(true)
     
 
     useEffect(()=>{
@@ -20,6 +21,7 @@ const Product = () => {
         .then(success => {
             console.log(success.data)
             setProducts(success.data)
+            setLoading(false)
         })
         .catch(err => console.log(err))
     },[])
@@ -29,46 +31,52 @@ const Product = () => {
     const indexOfFirstProduct = indexOfLastProduct - productPerPage
     const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct)
 
-  return (
-      <Container>
-          <Container style = {{padding:"25px"}}>
-            <h2>
-                Product
-            </h2>
-          </Container>
-        <CardDeck >
-            {currentProducts.map((item)=>{
-                return(
-                    <Col xs="12" md ="6" lg="4">
-                        <Card style = {{minWidth:"300px", marginBottom:"25px"}} >
-                            <CardImg top width="100%" height="300px" src={item.image_url} alt="Card image cap" />
-                            <CardBody>
-                                <CardTitle>
-                                    <h3>
-                                        {item.name}
-                                    </h3>
-                                </CardTitle>
-                                <CardSubtitle>
-                                    <h4>
-                                        {item.price}
-                                    </h4>
-                                </CardSubtitle>
-                                <CardText>
-                                    {item.type}
-                                </CardText>
-                                    <Link to={`/product/${item.name}`}>
-                                        <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}} >Check this</Button>
-                                    </Link>
-                            </CardBody>
-                        </Card>
-                    </Col>
-                )
-            })}           
-        </CardDeck>
-        <ProductPagination productPerPage={productPerPage} totalProducts={products.length} setCurrentPage={setCurrentPage} currentPage = {currentPage}></ProductPagination>
-      </Container>
-    
-  );
+    if(loading){
+        return(
+            <Loading></Loading>
+        )
+    }else{
+        return (
+            <Container>
+                <Container style = {{padding:"25px"}}>
+                  <h2>
+                      Product
+                  </h2>
+                </Container>
+              <CardDeck >
+                  {currentProducts.map((item)=>{
+                      return(
+                          <Col xs="12" md ="6" lg="4">
+                              <Card style = {{minWidth:"300px", marginBottom:"25px"}} >
+                                  <CardImg top width="100%" height="300px" src={item.image_url} alt="Card image cap" />
+                                  <CardBody>
+                                      <CardTitle>
+                                          <h3>
+                                              {item.name}
+                                          </h3>
+                                      </CardTitle>
+                                      <CardSubtitle>
+                                          <h4>
+                                              {item.price}
+                                          </h4>
+                                      </CardSubtitle>
+                                      <CardText>
+                                          {item.type}
+                                      </CardText>
+                                          <Link to={`/product/${item.name}`}>
+                                              <Button className = "BuyBtn" style = {{backgroundColor:"palevioletred", border: "none"}} >Check this</Button>
+                                          </Link>
+                                  </CardBody>
+                              </Card>
+                          </Col>
+                      )
+                  })}           
+              </CardDeck>
+              <ProductPagination productPerPage={productPerPage} totalProducts={products.length} setCurrentPage={setCurrentPage} currentPage = {currentPage}></ProductPagination>
+            </Container>
+        );
+    }
+  
 };
 
 export default Product;

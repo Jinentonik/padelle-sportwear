@@ -4,6 +4,7 @@ import {Container, Col, Row, Form, FormGroup, Label, Input, Button } from 'react
 import product1 from '../components/Images/female_sport3.jpg'
 import axios from 'axios'
 import currency from '../components/Util/currency'
+import Loading from '../components/loading'
 
 
 const ProductDetailsPage =(props) => {
@@ -23,8 +24,7 @@ const ProductDetailsPage =(props) => {
     const [productInfoList, setProductInfoList] = useState([])
     const [token, setToken] = useState(localStorage.getItem("token"))
     const [admin, setAdmin] = useState(localStorage.getItem("admin_status"))
-
-    
+    const [loading, setLoading] = useState(true)
 
     useEffect(()=>{
         axios({
@@ -73,6 +73,7 @@ const ProductDetailsPage =(props) => {
                 }
             }
             setProductQtyList(productQtyListArr)
+            setLoading(false)
         })
         .catch(err => {
             console.log(err.response)
@@ -172,123 +173,131 @@ const ProductDetailsPage =(props) => {
         console.log(qty)
         setProductQtyList(qty)
     }
+    if(loading){
+        return(
+            <Container style={{height:'500px'}}>
+                <Loading></Loading>
+            </Container>
+        )
+    }else{
+        return(
+            <Container style={{marginTop:"5%", marginBottom:"5%"}}>
+                <Row>
+                    <Col xs="12" lg="6">
+                        <img src={productImage} style = {{width:"100%", maxHeight:"800px"}}></img>
+                    </Col>
+                    <Col xs="12" lg="6" >
+                        <Row style={{display:"flex", justifyContent:"center"}}>
+                            <h3>
+                                {productName}
+                            </h3>
+                            
+                        </Row>
+                        <FormGroup row>
+                            <Col sm={6}>
+                                <Label for="type" >
+                                    <h4>Type:</h4>
+                                </Label>
+                            </Col>
+                            <Col sm={4}>
+                                <h5>{productType}</h5>
+                            </Col> 
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col sm={6}>
+                                <Label for="price" >
+                                    <h4>Price:</h4>
+                                </Label>
+                            </Col>
+                            <Col sm={4}>
+                                <h5>{currency.formatCurrency(Number(productPrice))}</h5>
+                            </Col> 
+                        </FormGroup>
+                        
+                        <FormGroup row>
+                            <Col sm={6}>
+                                <Label for="selectColor" >
+                                    <h4>Color:</h4>
+                                </Label>
+                            </Col>
+                            <Col sm={4}>
+                                <Input type="select" name="selectColor" id="selectColor" value={selectColor} onChange={(e)=>changeColor(e.target.value)}>
+                                    {
+                                        productColors.map((color)=>{
+                                            return(
+                                                <option value={color}>
+                                                    {color}
+                                                </option>
+                                            )
+                                        })
+                                    }
+                                </Input>
+                            </Col> 
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col sm={6}>
+                                <Label for="selectSize" >
+                                    <h4>Size:</h4>
+                                </Label> 
+                            </Col>
+                            <Col sm={4}>
+                                <Input type="select" name="selectSize" id="selectSize" value = {selectSize} onChange={(e)=>changeSize(e.target.value)}>
+                                    {
+                                        // productInfoList.map((item)=>{
+                                        //     if(item.color === selectColor){
+                                        //         return(
+                                        //             <option value={item.size}>{item.size}</option>
+                                        //         )
+                                        //     }
+                                        // })
+                                        productSize.map(size=>{
+                                            return(
+                                                <option value={size}>{size}</option>
+                                            )
+                                        })
+                                    }
+                                </Input>
+                            </Col>
+                        </FormGroup>
+                        <FormGroup row>
+                            <Col sm={6}>
+                                <Label for="selectQty" >
+                                    <h4>Quantity:</h4>
+                                </Label> 
+                            </Col>
+                            <Col sm={4}>
+                                <Input type="select" name="selectQty" id="selectQty" value = {selectQty} onChange={(e)=>setSelectQty(e.target.value)}>
+                                    {
+                                        productQtyList.map(num=>{
+                                            return(
+                                                <option value={num}>{num}</option>
+                                            )
+                                        })
+                                    }
+                                </Input>
+                            </Col>
+                        </FormGroup>
+                        
+                        <Form onSubmit={(e)=>{submitFunc(e)}}>
+                            
+                            
+                            {
+                                token !== null && admin === 'false'?
+                                <Input type="submit" value="Add to cart" ></Input>
+                                :token === null?
+                                <Input type="submit" value="You have to Log In first" style={{color:"white"}}></Input>:
+                                <h5>You have to login with a user account to add item to cart.</h5>
+                            }
+                            
+                        </Form>
+                    </Col>
+                </Row>
+                
+                
+            </Container>
+        )
+    }
     
-    return(
-        <Container style={{marginTop:"5%", marginBottom:"5%"}}>
-            <Row>
-                <Col xs="12" lg="6">
-                    <img src={productImage} style = {{width:"100%", maxHeight:"800px"}}></img>
-                </Col>
-                <Col xs="12" lg="6" >
-                    <Row style={{display:"flex", justifyContent:"center"}}>
-                        <h3>
-                            {productName}
-                        </h3>
-                        
-                    </Row>
-                    <FormGroup row>
-                        <Col sm={6}>
-                            <Label for="type" >
-                                <h4>Type:</h4>
-                            </Label>
-                        </Col>
-                        <Col sm={4}>
-                            <h5>{productType}</h5>
-                        </Col> 
-                    </FormGroup>
-                    <FormGroup row>
-                        <Col sm={6}>
-                            <Label for="price" >
-                                <h4>Price:</h4>
-                            </Label>
-                        </Col>
-                        <Col sm={4}>
-                            <h5>{currency.formatCurrency(Number(productPrice))}</h5>
-                        </Col> 
-                    </FormGroup>
-                    
-                    <FormGroup row>
-                        <Col sm={6}>
-                            <Label for="selectColor" >
-                                <h4>Color:</h4>
-                            </Label>
-                        </Col>
-                        <Col sm={4}>
-                            <Input type="select" name="selectColor" id="selectColor" value={selectColor} onChange={(e)=>changeColor(e.target.value)}>
-                                {
-                                    productColors.map((color)=>{
-                                        return(
-                                            <option value={color}>
-                                                {color}
-                                            </option>
-                                        )
-                                    })
-                                }
-                            </Input>
-                        </Col> 
-                    </FormGroup>
-                    <FormGroup row>
-                        <Col sm={6}>
-                            <Label for="selectSize" >
-                                <h4>Size:</h4>
-                            </Label> 
-                        </Col>
-                        <Col sm={4}>
-                            <Input type="select" name="selectSize" id="selectSize" value = {selectSize} onChange={(e)=>changeSize(e.target.value)}>
-                                {
-                                    // productInfoList.map((item)=>{
-                                    //     if(item.color === selectColor){
-                                    //         return(
-                                    //             <option value={item.size}>{item.size}</option>
-                                    //         )
-                                    //     }
-                                    // })
-                                    productSize.map(size=>{
-                                        return(
-                                            <option value={size}>{size}</option>
-                                        )
-                                    })
-                                }
-                            </Input>
-                        </Col>
-                    </FormGroup>
-                    <FormGroup row>
-                        <Col sm={6}>
-                            <Label for="selectQty" >
-                                <h4>Quantity:</h4>
-                            </Label> 
-                        </Col>
-                        <Col sm={4}>
-                            <Input type="select" name="selectQty" id="selectQty" value = {selectQty} onChange={(e)=>setSelectQty(e.target.value)}>
-                                {
-                                    productQtyList.map(num=>{
-                                        return(
-                                            <option value={num}>{num}</option>
-                                        )
-                                    })
-                                }
-                            </Input>
-                        </Col>
-                    </FormGroup>
-                    
-                    <Form onSubmit={(e)=>{submitFunc(e)}}>
-                        
-                        
-                        {
-                            token !== null && admin === 'false'?
-                            <Input type="submit" value="Add to cart" ></Input>
-                            :token === null?
-                            <Input type="submit" value="You have to Log In first" style={{color:"white"}}></Input>:
-                            <h5>You have to login with a user account to add item to cart.</h5>
-                        }
-                        
-                    </Form>
-                </Col>
-            </Row>
-            
-            
-        </Container>
-    )
 }
 
 export default ProductDetailsPage

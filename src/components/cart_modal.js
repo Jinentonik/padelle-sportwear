@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button, Row, Form, FormGroup, Label, Input, FormFeedback, FormText, Col, Table} from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Row, Container, Input, Table} from 'reactstrap';
 import axios from 'axios'
 import {Link} from 'react-router-dom'
 import currency from '../components/Util/currency'
@@ -10,6 +10,7 @@ const ShoppingCart = (props) => {
     const [cartItem, setCartItem] = useState([])
     let totalCartAmount = 0
     const [token, setToken] = useState(localStorage.getItem('token'))
+    const [loading,setLoading] = useState(true)
     const toggle = () => {
         // console.log(modal) 
         setCartModal(!cartModal);
@@ -128,10 +129,12 @@ const ShoppingCart = (props) => {
         })
         .catch(err => console.log(err.response))
     }
+
+
     return( 
-        
+    
         <Modal isOpen={cartModal} toggle={toggle} >
-          <ModalHeader toggle={toggle}>Shopping Cart</ModalHeader>
+            <ModalHeader toggle={toggle}>Shopping Cart</ModalHeader>
                 <ModalBody>
                     {
                         cartItem.length === 0? "Cart is empty":
@@ -208,6 +211,8 @@ const ShoppingCart = (props) => {
         </Modal>
         
     )
+
+    
 }
 
 export default ShoppingCart
