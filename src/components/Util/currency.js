@@ -1,6 +1,7 @@
 
 export default {
-    formatCurrency :  (num) => {
-        return '$' + Number(num.toFixed(2)).toLocaleString() + ''
+    formatCurrency :  (num, currency, currencyRate) => {
+        let newNum = num * currencyRate
+        return currency +' '+ Number(newNum.toFixed(2)).toLocaleString() + ''
     }
 }

@@ -8,8 +8,10 @@ import ProductPagination from './pagination'
 import axios from 'axios'
 import {Link } from 'react-router-dom'
 import Loading from './loading'
+import currencyHelper from '../components/Util/currency'
 
-const Product = () => {
+const Product = (props) => {
+    const {currency, currencyRate} = props
     const [currentPage, setCurrentPage] = useState(1)
     const [productPerPage] = useState(3)
     const [products, setProducts] = useState([])
@@ -57,7 +59,7 @@ const Product = () => {
                                       </CardTitle>
                                       <CardSubtitle>
                                           <h4>
-                                              {item.price}
+                                              {currencyHelper.formatCurrency(Number(item.price), currency, currencyRate)}
                                           </h4>
                                       </CardSubtitle>
                                       <CardText>

@@ -2,11 +2,11 @@ import React, {useState, useEffect} from 'react'
 import { Modal, ModalHeader, ModalBody, ModalFooter, Row, Container, Input, Table} from 'reactstrap';
 import axios from 'axios'
 import {Link} from 'react-router-dom'
-import currency from '../components/Util/currency'
+import currencyHelper from '../components/Util/currency'
 
 const ShoppingCart = (props) => {
     
-    const {cartModal, setCartModal} = props
+    const {cartModal, setCartModal, currency, currencyRate} = props
     const [cartItem, setCartItem] = useState([])
     let totalCartAmount = 0
     const [token, setToken] = useState(localStorage.getItem('token'))
@@ -162,7 +162,7 @@ const ShoppingCart = (props) => {
                                                     <p style={{padding:"0px"}}>{item.item.type}</p>
                                                     <p style={{padding:"0px"}}>{item.item.size}</p>
                                                     <p style={{padding:"0px"}}>{item.item.color}</p>
-                                                    <p style={{padding:"0px"}}>{currency.formatCurrency(item.item.price)}</p>
+                                                    <p style={{padding:"0px"}}>{currencyHelper.formatCurrency(Number(item.item.price), currency, currencyRate)}</p>
 
                                                 </td>
                                                 <td>
@@ -175,7 +175,7 @@ const ShoppingCart = (props) => {
                                                     
                                                 </td>
                                                 <td>
-                                                    {currency.formatCurrency(item.cart.amount * item.item.price)}
+                                                    {currencyHelper.formatCurrency(Number(item.cart.amount * item.item.price), currency, currencyRate)}
                                                 </td>
                                                 <td>
                                                     <Row style={{justifyContent:"center"}}>
@@ -193,7 +193,7 @@ const ShoppingCart = (props) => {
                                         <h4>Total:</h4>
                                     </td>
                                     <td>
-                                        <h5>{currency.formatCurrency(totalCartAmount)}</h5>
+                                        <h5>{currencyHelper.formatCurrency(Number(totalCartAmount), currency, currencyRate)}</h5>
                                     </td>
                                 </tr>
                                 

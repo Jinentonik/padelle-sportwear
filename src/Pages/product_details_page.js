@@ -3,12 +3,12 @@ import {useParams} from "react-router-dom"
 import {Container, Col, Row, Form, FormGroup, Label, Input, Button } from 'reactstrap'
 import product1 from '../components/Images/female_sport3.jpg'
 import axios from 'axios'
-import currency from '../components/Util/currency'
+import currencyHelper from '../components/Util/currency'
 import Loading from '../components/loading'
 
 
 const ProductDetailsPage =(props) => {
-    const {logInModal, setLogInModal} = props
+    const {logInModal, setLogInModal, currency, currencyRate} = props
     const {name} = useParams()
     const [product,setProduct] = useState('')
     const [productName, setProductName] = useState('')
@@ -52,7 +52,7 @@ const ProductDetailsPage =(props) => {
                     if(sizeArr.indexOf(productInfo[i].size) === -1 ){
                         sizeArr.push(productInfo[i].size)
                     }
-                    productsArr.push({"id": productInfo[i].id, "size": productInfo[i].size, "color": productInfo[i].color, "stock": productInfo[i].stock, "image":productInfo[i].image_url})
+                    productsArr.push({"id": productInfo[i].id, "size": productInfo[i].size, "color": productInfo[i].color, "stock": productInfo[i].stock, "price":productInfo[i].price, "image":productInfo[i].image_url})
             }
             
             setProductColors(colorArr)
@@ -127,10 +127,11 @@ const ProductDetailsPage =(props) => {
         console.log('changeColor', value, selectSize)
         let qty = []
         for(let i = 0; i < productInfoList.length; i++){
+            
             if(productInfoList[i].color === value && productInfoList[i].size === selectSize){
                 console.log('found change color match')
                 if(productInfoList[i].stock < 1){
-                    qty.push('SOLD')
+                    qty.push('SOLD OUT')
                 }else{
                     for(let j = 0; j < productInfoList[i].stock; j++){
                         qty.push(j+1)
@@ -141,7 +142,11 @@ const ProductDetailsPage =(props) => {
 
             if(productInfoList[i].color === value){
                 setProductImage(productInfoList[i].image)
+                setProductPrice(productInfoList[i].price)
             }
+        }
+        if(qty.length === 0){
+            qty=['SOLD OUT']
         }
         setProductQtyList(qty)
     }
@@ -153,10 +158,11 @@ const ProductDetailsPage =(props) => {
 
         let qty = []
         for(let i = 0; i < productInfoList.length; i++){
+            console.log('for loop', productInfoList[i].size, productInfoList[i].color)
             if(productInfoList[i].size === value && productInfoList[i].color === selectColor){
                 console.log('found change size match')
                 if(productInfoList[i].stock < 1){
-                    qty.push('SOLD')
+                    qty.push('SOLD OUT')
                 }else{
                     for(let j = 0; j < productInfoList[i].stock; j++){
                         qty.push(j+1)
@@ -167,7 +173,7 @@ const ProductDetailsPage =(props) => {
         }
 
         if(qty.length === 0){
-            qty.push('SOLD')
+            qty.push('SOLD OUT')
         }
 
         console.log(qty)
@@ -210,7 +216,7 @@ const ProductDetailsPage =(props) => {
                                 </Label>
                             </Col>
                             <Col sm={4}>
-                                <h5>{currency.formatCurrency(Number(productPrice))}</h5>
+                                <h5>{currencyHelper.formatCurrency(Number(productPrice), currency, currencyRate)}</h5>
                             </Col> 
                         </FormGroup>
                         

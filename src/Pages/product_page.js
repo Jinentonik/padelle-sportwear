@@ -6,13 +6,13 @@ import {
 // import product1 from '../components/Images/female_sport3.jpg'
 import ProductPagination from '../components/pagination'
 import axios from 'axios'
-import currency from '../components/Util/currency'
+import currencyHelper from '../components/Util/currency'
 import Filter from '../components/Filter'
 import {Link } from 'react-router-dom'
 import Loading from '../components/loading'
 
-const ProductPage = () =>{
-
+const ProductPage = (props) =>{
+    const {currency, currencyRate} = props
     const [currentPage, setCurrentPage] = useState(1)
     const [productPerPage] = useState(9)
     const [products, setProducts] = useState([])
@@ -112,7 +112,7 @@ const ProductPage = () =>{
                                 </CardTitle>
                                 <CardSubtitle>
                                     <h4>
-                                        {currency.formatCurrency(item.price)}
+                                        {currencyHelper.formatCurrency(item.price, currency, currencyRate)}
                                     </h4>
                                 </CardSubtitle>
                                 <CardText>

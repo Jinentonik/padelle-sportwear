@@ -6,7 +6,7 @@ const AddProductModal = (props) => {
     const [productType, setProductType] = useState('')
     const [productName, setProductName] = useState('')
     const [productColor, setProductColor] = useState('')
-    const [productSize, setProductSize] = useState('XS')
+    const [productSize, setProductSize] = useState('XXS')
     const [stockQty, setStockQty] = useState('')
     const [productPrice, setProductPrice] = useState('')
     const [imageFile, setImageFile] = useState(null)
@@ -36,14 +36,7 @@ const AddProductModal = (props) => {
                 "stock": stockQty,
                 "image": imageFile.name
             }
-        })
-        // axios({
-        //     url: 'https://padelle.herokuapp.com/api/v1/items/upload_item_image',
-        //     method: "POST",
-        //     data: formData,
-            
-            
-        // })
+        })   
         .then(success => {
             let formData = new FormData()
             formData.append("img", imageFile)
@@ -76,7 +69,7 @@ const AddProductModal = (props) => {
         })
         .catch(err => {
             console.log('error happen')
-            console.log(err)
+            console.log(err.response)
         })
     }
 
@@ -100,12 +93,14 @@ const AddProductModal = (props) => {
                         <FormGroup>
                             <Label for="size">Size</Label>
                             <Input type="select" name="size" id="size" onInput = {(e)=> setProductSize(e.target.value)}>
+                            <option value = "XXS">XXS</option>
                             <option value = "XS">XS</option>
                             <option value = "S">S</option>
                             <option value = "M">M</option>
                             <option value = "L">L</option>
                             <option value = "XL">XL</option>
                             <option value = "XXL">XXL</option>
+                            <option value = "XXXL">XXXL</option>
                             </Input>
                         </FormGroup>
                         <FormGroup>

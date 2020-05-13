@@ -65,6 +65,12 @@ input[type=submit] {
   color: white
 }
 
+input[type=button] {
+  background: palevioletred;
+  color: white;
+  border:none
+}
+
 .userProfileTitle{
   text-align: right;
 }

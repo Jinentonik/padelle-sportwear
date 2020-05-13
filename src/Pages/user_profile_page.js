@@ -6,8 +6,10 @@ import ChangePasswordModal from '../components/change_password_modal'
 import EditAddressModal from '../components/edit_address_modal'
 import axios from 'axios'
 import Loading from '../components/loading'
+import currencyHelper from '../components/Util/currency'
 
 const UserProfilePage = (props) => {
+    const {currency, currencyRate} = props
     const [activeTab, setActiveTab] = useState('1');
     const [token, setToken] = useState(localStorage.getItem("token"))
     const [adminStatus, setAdminStatus] = useState(localStorage.getItem("admin_status"))
@@ -235,7 +237,7 @@ const UserProfilePage = (props) => {
                               <td>{item.item.color}</td>
                               <td>{item.item.size}</td>
                               <td>{item.cart.amount}</td>
-                              <td>{item.item.price}</td>
+                              <td>{currencyHelper.formatCurrency(Number(item.item.price), currency, currencyRate)}</td>
                               
                               </tr>
                           )

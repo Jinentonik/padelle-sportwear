@@ -2,11 +2,12 @@ import React, {useState, useEffect} from "react";
 import DropIn from "braintree-web-drop-in-react";
 import {Row, Col, Container, Table, Button, Form, FormGroup, Label, Input, FormFeedback, FormText} from "reactstrap"
 import axios from 'axios'
-import currency from '../components/Util/currency'
+import currencyHelper from '../components/Util/currency'
 import { toast } from 'react-toastify'
 import Loading from '../components/loading'
 
-const CheckOutPage = () => {
+const CheckOutPage = (props) => {
+	const {currency, currencyRate} = props
 	const [token, setToken] = useState(null)//client token from braintree
 	const [auth_token, setAuthToken] = useState(localStorage.getItem('token')) //token receive after login
 	const [instance, setInstance] = useState('')
@@ -195,7 +196,10 @@ const CheckOutPage = () => {
 			console.log(err.response)
 			setAuthToken(null)
             localStorage.removeItem("token")
-            localStorage.removeItem("admin_status")
+			localStorage.removeItem("admin_status")
+			localStorage.removeItem("currency")
+			localStorage.removeItem("currencyRate")
+			
 		})
 	  }
 		//deduct item in cart
@@ -293,7 +297,7 @@ const CheckOutPage = () => {
 														<p style={{paddingBottom:"0px"}}>{item.item.type}</p>
 														<p style={{paddingBottom:"0px"}}>{item.item.size}</p>
 														<p style={{paddingBottom:"0px"}}>{item.item.color}</p>
-														<p style={{paddingBottom:"0px"}}>{currency.formatCurrency(item.item.price)}</p>
+														<p style={{paddingBottom:"0px"}}>{currencyHelper.formatCurrency(Number(item.item.price), currency, currencyRate)}</p>
 													</td>
 													<td>
 														{/* <input type ="number" value = {item.cart.amount} onChange = {(e)=>{setQty(e.target.value)}} style={{width:"50px"}}></input> */}
@@ -305,7 +309,7 @@ const CheckOutPage = () => {
 														
 													</td>
 													<td>
-														{currency.formatCurrency(item.cart.amount * item.item.price)}
+														{currencyHelper.formatCurrency(Number(item.cart.amount * item.item.price), currency, currencyRate)}
 													</td>
 													<td>
 														<Row style={{justifyContent:"center"}}>
@@ -324,7 +328,7 @@ const CheckOutPage = () => {
 												<h4>Total:</h4>
 											</td>
 											<td>
-												<h5>{currency.formatCurrency(totalCartAmount)}</h5>
+												<h5>{currencyHelper.formatCurrency(Number(totalCartAmount), currency, currencyRate)}</h5>
 											</td>
 										</tr>
 									
@@ -390,7 +394,7 @@ const CheckOutPage = () => {
 									// onInstance={ins => instance = ins}
 									onInstance={ins => setInstance(ins)}
 								/>
-								<Button onClick ={()=>makePayment()}>Pay</Button>
+								<Button onClick ={()=>makePayment()} style={{margin:'10px', color:"White", backgroundColor:"palevioletred", border:"none"}}>Pay</Button>
 							</Col>
 						</Row>
 					</Container>

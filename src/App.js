@@ -1,4 +1,4 @@
-import React, {useState, createContext} from 'react';
+import React, {useState, useEffect} from 'react';
 import logo from './logo.svg';
 import Navbar from './components/navbar'
 import MainPic from './components/main_pic'
@@ -14,27 +14,67 @@ import CheckOutPage from './Pages/checkout'
 import { Route } from 'react-router-dom';
 import { ToastContainer} from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
+import axios from 'axios'
 
 
 function App() {
   const [logInModal, setLogInModal] = useState(false)
+  const [xChangeRateEnt, setXChangeRateEnt] = useState() //exchange rate entries. Use in navbar.js
+  const [currencyRate, setCurrencyRate] = useState(localStorage.getItem('currencyRate') === null?'1':localStorage.getItem('currencyRate')) //conversion rate
+  const [currency, setCurrency] = useState(localStorage.getItem('currency') === null?'USD':localStorage.getItem('currency')) //name of the currency
+
+  console.log('currency', currency, currencyRate)
+  useEffect(()=>{
+    axios({
+      url:'https://openexchangerates.org/api/latest.json',
+      method:'GET',
+      headers:{
+        "Authorization": "Token 42eb5d5255ef46aca68c6c747063299a"
+      }
+    })
+    .then(
+      success=>{
+        console.log('currency rate')
+        console.log(success)
+        let jsonObj = success.data.rates
+        let entries = Object.entries(jsonObj)
+        console.log('entries app.js', entries)
+        setXChangeRateEnt(entries)
+      }
+    )
+    .catch(err=>console.log(err.response))
+  },[])
+  // console.log('xchangerate', xChangeRate)
   return (
     <div className="App">
     
-        <Navbar logInModal ={logInModal} setLogInModal={setLogInModal}></Navbar>
+        <Navbar 
+          logInModal ={logInModal} 
+          setLogInModal = {setLogInModal} 
+          currency = {currency} 
+          setCurrency = {setCurrency}
+          xChangeRateEnt = {xChangeRateEnt}
+          currencyRate = {currencyRate}
+          setCurrencyRate = {setCurrencyRate}
+          ></Navbar>
         <Route path='/' exact >
           <MainPic></MainPic>
-          <Product></Product>
+          <Product currency={currency} currencyRate={currencyRate}></Product>
         </Route>
-        <Route path='/products' exact component={ProductPage}></Route>
-        <Route path='/profile' component={UserProfilePage}></Route>
+        <Route path='/products' exact >
+          <ProductPage currency={currency} currencyRate={currencyRate}></ProductPage>
+        </Route>
+        <Route path='/profile' >
+          <UserProfilePage currency={currency} currencyRate={currencyRate}></UserProfilePage>
+        </Route>
         <Route path='/admin' component={AdminProfilePage}></Route>
         <Route path='/all_users' component={AllUsers}></Route>
         <Route path='/product/:name' >
-          <ProductDetailsPage logInModal ={logInModal} setLogInModal={setLogInModal}></ProductDetailsPage>
+          <ProductDetailsPage logInModal ={logInModal} setLogInModal={setLogInModal} currency={currency} currencyRate={currencyRate}></ProductDetailsPage>
         </Route>
-        <Route path='/checkout' component={CheckOutPage}></Route>
+        <Route path='/checkout' >
+          <CheckOutPage currency={currency} currencyRate={currencyRate}></CheckOutPage>
+        </Route>
         <div style = {{paddingTop:"10px", width:"100%", backgroundColor:"palevioletred", display:"flex", justifyContent: "space-between"}}>
           
           <p style = {{paddingTop: "8px", color:"white", margin:"0px"}}>

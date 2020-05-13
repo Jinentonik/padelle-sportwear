@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  
+  Input,
   Collapse,
   Navbar,
   NavbarToggler,
@@ -23,7 +23,7 @@ import axios from 'axios';
 
 
 const NavBar = (props) => {
-  const {logInModal, setLogInModal} = props
+  const {logInModal, setLogInModal, currency, setCurrency, xChangeRateEnt, currencyRate, setCurrencyRate} = props
   const [cartItem, setCartItem] = useState([])
   const [isOpen, setIsOpen] = useState(false);
   const [signUpModal, setSignUpModal] = useState(false)
@@ -32,6 +32,8 @@ const NavBar = (props) => {
   const history = useHistory();
   const [token,setToken] = useState(localStorage.getItem("token"))
   const admin_status = localStorage.getItem("admin_status")
+
+  const currencyList = ['USD', 'CAD', 'AUD', 'EUR', 'CNY', 'GBP', 'MYR', 'SGD']
 
   const toggle = () => {
     setIsOpen(!isOpen)
@@ -46,6 +48,9 @@ const NavBar = (props) => {
     setToken(null)
     localStorage.removeItem("token")
     localStorage.removeItem("admin_status")
+    localStorage.removeItem("currency")
+    localStorage.removeItem("currencyRate")
+
     history.push("/");
   }
 
@@ -78,6 +83,19 @@ const NavBar = (props) => {
       localStorage.removeItem("admin_status")
     })
   },[])
+
+  const changeCurrencyFunc = (text) => {
+    for(const [currencyName, currencyRate] of xChangeRateEnt){
+      if(currencyName === text){
+        setCurrency(text)
+        setCurrencyRate(currencyRate)
+        localStorage.setItem('currency',text)
+        localStorage.setItem('currencyRate', currencyRate)
+      }
+    }
+    
+    
+  }
   
   return (
     <div id = "navBarDiv">
@@ -164,14 +182,51 @@ const NavBar = (props) => {
               <a href = "#" style = {{color:"gray"}} onClick = {cartFunc}>Cart<FiShoppingCart size = {22} color ={'gray'}></FiShoppingCart></a>
             </NavLink>
           </NavItem>
+          
         </Nav>
             }
+        {
+          admin_status === 'true'?
+          <Nav navbar style={{display:'none'}}>
+          <NavItem style={{display:"flex", justifyContent:"center"}}>
+              <Input type='select' value={currency} onChange={(e)=>changeCurrencyFunc(e.target.value)}>
+                {
+                  currencyList.map(unit => {
+                    return(
+                      <option value={unit}>{unit}</option>
+                    )
+                  })
+                }
+              </Input>
+            </NavItem>
+        </Nav>:
+        <Nav navbar>
+        <NavItem style={{display:"flex", justifyContent:"center"}}>
+            <Input type='select' value={currency} onChange={(e)=>changeCurrencyFunc(e.target.value)}>
+              {
+                currencyList.map(unit => {
+                  return(
+                    <option value={unit}>{unit}</option>
+                  )
+                })
+              }
+            </Input>
+          </NavItem>
+      </Nav>
+        }
         </Collapse>
       </Navbar>
       </div>
       <SignUpModal modal = {signUpModal} setModal = {setSignUpModal} logInModal = {logInModal} setLogInModal={setLogInModal}></SignUpModal>
       <LogInModal modal = {logInModal} setModal = {setLogInModal} signUpModal = {signUpModal} setSignUpModal = {setSignUpModal}></LogInModal>
-      <ShoppingCartModal cartModal = {cartModal} setCartModal = {setCartModal} cartItem = {cartItem} setCartItem = {setCartItem}></ShoppingCartModal>
+      <ShoppingCartModal 
+        cartModal = {cartModal} 
+        setCartModal = {setCartModal} 
+        cartItem = {cartItem} 
+        setCartItem = {setCartItem} 
+        currency={currency} 
+        currencyRate={currencyRate}
+        ></ShoppingCartModal>
       
     </div>
   );
