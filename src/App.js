@@ -8,7 +8,6 @@ import './App.css';
 import ProductPage from './Pages/product_page'
 import UserProfilePage from './Pages/user_profile_page'
 import AdminProfilePage from './Pages/admin_profile_page'
-import AllUsers from './Pages/delete_users_page'
 import ProductDetailsPage from './Pages/product_details_page'
 import CheckOutPage from './Pages/checkout'
 import { Route } from 'react-router-dom';
@@ -68,7 +67,6 @@ function App() {
           <UserProfilePage currency={currency} currencyRate={currencyRate}></UserProfilePage>
         </Route>
         <Route path='/admin' component={AdminProfilePage}></Route>
-        <Route path='/all_users' component={AllUsers}></Route>
         <Route path='/product/:name' >
           <ProductDetailsPage logInModal ={logInModal} setLogInModal={setLogInModal} currency={currency} currencyRate={currencyRate}></ProductDetailsPage>
         </Route>

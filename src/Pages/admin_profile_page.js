@@ -10,6 +10,8 @@ import AddProductModal from '../components/add_product_modal'
 import Loading from '../components/loading'
 import AdminAddPoductDetailsModal from '../components/admin_add_product_details_modal'
 import '../App.css';
+import ChangePasswordModal from '../components/change_password_modal'
+
 
 
 const AdminProfilePage = () => {
@@ -26,8 +28,14 @@ const AdminProfilePage = () => {
     const [productDetailsList, setProductDetailsList] = useState([])
     const [alertModal, setAlertModal] = useState(false)
     const [deleteName, setDeleteName] = useState('')
+    const [changePasswordModal,setChangePasswordModal] = useState(false)
+
 
     const toggle = () => setModal(!modal);
+
+    const toggleChangePasswordModal = () => {
+        setChangePasswordModal(!changePasswordModal)
+      }
 
     const toggleAlertModal = () => setAlertModal(!alertModal)
 
@@ -91,7 +99,7 @@ const AdminProfilePage = () => {
         setDeleteName(productName)
     }
     const removeAllSameNameItem = () => {
-        console.log('remove')
+        console.log('remove', deleteName)
         axios({
             url:`https://padelle.herokuapp.com/api/v1/items/delete/name`,
             method:'POST',
@@ -142,7 +150,12 @@ const AdminProfilePage = () => {
     }else{
         return(
             <div>
-                <Button onClick={toggle} style={{margin:"10px", backgroundColor:"palevioletred", border:"none"}}>Add product</Button>
+                <Col sm="12">
+                    <Button onClick={toggle} style={{margin:"10px", backgroundColor:"palevioletred", border:"none"}}>Add product</Button>
+                    <Button onClick = {toggleChangePasswordModal} style={{margin:"10px", color:'white', backgroundColor:'palevioletred', border:'none'}}>Change password</Button>
+                </Col>
+
+                
                 <Modal isOpen={alertModal} toggle={toggleAlertModal} >
                     <ModalHeader toggle={toggleAlertModal}>Warning</ModalHeader>
                     <ModalBody>
@@ -277,6 +290,8 @@ const AdminProfilePage = () => {
                             </Container>
             }
                 </Container>
+                <ChangePasswordModal modal={changePasswordModal} setModal={setChangePasswordModal} ></ChangePasswordModal>
+
             </div>
         )
     }

@@ -1,7 +1,8 @@
 import React, {useState} from 'react'
-import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormFeedback, FormText, Col} from 'reactstrap';
+import { Modal, ModalHeader, ModalBody, ModalFooter, Form, FormGroup, Label, Input, FormFeedback, Row, Col} from 'reactstrap';
 import axios from 'axios'
 import { toast } from 'react-toastify'
+import Loading from './loading'
 
 const SignUpModal = (props) => {
     const {modal, setModal, logInModal, setLogInModal} = props
@@ -11,10 +12,12 @@ const SignUpModal = (props) => {
     const [confirmPassword, setConfirmPassword] = useState('')
     const [passwordType, setPasswordType] = useState('password')
     const [passwordConstraintMet, setpasswordConstraintMet] = useState(false)
+    const [userNameValidity, setUserNameValidity] = useState(false)
+    const [userNameLoading, setUserNameLoading] = useState(false)
     
     const checkAllField = () => {
-        
-        if(username === '' || email === '' || password !== confirmPassword || passwordConstraintMet === false){
+        //set disabled function of submit button to true or false
+        if(username === '' || email === '' || password !== confirmPassword || passwordConstraintMet === false || userNameValidity === false){
             return true
         }
         else{
@@ -36,6 +39,27 @@ const SignUpModal = (props) => {
         setPassword('')
         setEmail('')
         setConfirmPassword('')
+    }
+
+    const userNameCheck = (value) => {
+        setUsername(value)
+        setUserNameLoading(true)
+        axios({
+            url:`https://padelle.herokuapp.com/api/v1/users/check_name/${value}`
+        })
+        .then(success=>{
+            console.log(success)
+            if(success.data.message === 'This username exists'){
+                setUserNameValidity(false)
+                setUserNameLoading(false)
+            }else{
+                setUserNameValidity(true)
+                setUserNameLoading(false)
+            }
+        })
+        .catch(
+            err=>console.log(err.response)
+        )
     }
 
     const invalidPasswordFunc = () => {
@@ -154,7 +178,22 @@ const SignUpModal = (props) => {
                 <ModalBody>
                     <FormGroup>
                         <Label for="username">Username</Label>
-                        <Input type="text" name="username" id="username" value = {username} onChange = {(e)=> {setUsername(e.target.value)} }/>
+                        <Input type="text" name="username" id="username" value = {username} onChange = {(e)=> {userNameCheck(e.target.value)} } valid = {userNameValidity} invalid = {!userNameValidity}/>
+                        {
+                            userNameLoading?
+                            <Row>
+                                <Col xs="2">
+                                    <Loading width = "18px" height = "18px" ></Loading>
+                                
+                                </Col>
+                                <Col xs="10">
+                                    <div style={{width:'10px', height:'10px'}}></div>
+                                </Col>
+                            </Row>:
+                            userNameValidity?
+                                <FormFeedback valid={userNameValidity}>This username is available</FormFeedback>:
+                                <FormFeedback>This username is not available</FormFeedback>
+                        }
                     </FormGroup>
                     <FormGroup>
                         <Label for="email">Email</Label>

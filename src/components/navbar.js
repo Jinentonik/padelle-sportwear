@@ -29,6 +29,7 @@ const NavBar = (props) => {
   const [signUpModal, setSignUpModal] = useState(false)
   // const [logInModal, setLogInModal] = useState(false)
   const [cartModal, setCartModal] = useState(false)
+  const [cartTotalItem, setCartTotalItem] = useState(0)
   const history = useHistory();
   const [token,setToken] = useState(localStorage.getItem("token"))
   const admin_status = localStorage.getItem("admin_status")
@@ -68,13 +69,14 @@ const NavBar = (props) => {
     })
     .then(success => {
       let cartData = []
-      console.log(success)
-      console.log(success.data)
+      let countItem = 0
       cartData = success.data
       cartData.sort()
-      console.log('cartData', cartData)
       setCartItem(success.data)
-        
+      for(let i = 0; i < success.data.length; i++){
+        countItem += success.data[i].cart.amount
+      }
+      setCartTotalItem(countItem)
     })
     .catch(err => {
       console.log(err.response)
@@ -114,11 +116,6 @@ const NavBar = (props) => {
             <NavItem>
               <Link to="/products">
                 <NavLink >Products</NavLink>
-              </Link>
-            </NavItem>
-            <NavItem>
-              <Link to="/all_users">
-                <NavLink >All users</NavLink>
               </Link>
             </NavItem>
             <UncontrolledDropdown nav inNavbar>
@@ -179,7 +176,7 @@ const NavBar = (props) => {
           </NavItem>
           <NavItem>
             <NavLink>
-              <a href = "#" style = {{color:"gray"}} onClick = {cartFunc}>Cart<FiShoppingCart size = {22} color ={'gray'}></FiShoppingCart></a>
+              <a href = "#" style = {{color:"gray"}} onClick = {cartFunc}>Cart<FiShoppingCart size = {22} color ={'gray'}></FiShoppingCart> {cartTotalItem}</a>
             </NavLink>
           </NavItem>
           
@@ -226,6 +223,8 @@ const NavBar = (props) => {
         setCartItem = {setCartItem} 
         currency={currency} 
         currencyRate={currencyRate}
+        cartTotalItem = {cartTotalItem}
+        setCartTotalItem = {setCartTotalItem}
         ></ShoppingCartModal>
       
     </div>

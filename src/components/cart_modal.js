@@ -6,7 +6,7 @@ import currencyHelper from '../components/Util/currency'
 
 const ShoppingCart = (props) => {
     
-    const {cartModal, setCartModal, currency, currencyRate} = props
+    const {cartModal, setCartModal, currency, currencyRate, cartTotalItem, setCartTotalItem} = props
     const [cartItem, setCartItem] = useState([])
     let totalCartAmount = 0
     const [token, setToken] = useState(localStorage.getItem('token'))
@@ -65,9 +65,14 @@ const ShoppingCart = (props) => {
         })
         .then(success => {
           let cartData = []
+          let countItem = 0
           console.log(success)
           console.log('raw',success.data)
           cartData = success.data
+          for(let i = 0; i < success.data.length; i++){
+            countItem += success.data[i].cart.amount
+          }
+          setCartTotalItem(countItem)
           cartData.sort((a, b)=>{
             if(a.cart.id > b.cart.id){
                 return 1
@@ -190,10 +195,23 @@ const ShoppingCart = (props) => {
                                 <tr>
                                     <td></td>
                                     <td>
-                                        <h4>Total:</h4>
+                                        <Row style={{justifyContent:"center"}}>
+                                            <h4>
+                                                Total:
+
+                                            </h4>
+                                        </Row>
                                     </td>
                                     <td>
-                                        <h5>{currencyHelper.formatCurrency(Number(totalCartAmount), currency, currencyRate)}</h5>
+                                        <Row style={{justifyContent:"center"}}>
+                                            <h4>{cartTotalItem}</h4>
+                                        </Row>
+                                    </td>
+                                    <td>
+                                        <Row style={{justifyContent:"center"}}>
+                                            <h4>{currencyHelper.formatCurrency(Number(totalCartAmount), currency, currencyRate)}</h4>
+
+                                        </Row>
                                     </td>
                                 </tr>
                                 
